@@ -1,4 +1,2 @@
-template.log
-toxics-3511523.log
+*.log
 *.pdf
-.Rhistory
