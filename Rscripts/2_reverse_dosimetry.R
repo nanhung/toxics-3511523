@@ -3,6 +3,9 @@ library(foreign)   # read.xport
 library(survey)    # svydesign
 library(magrittr)  # %<>%
 library(dplyr)     # mutate
+library(RMCSim)
+library(foreach)
+library(doParallel)
 
 load("data/Wtns.rda")
 load("data/Agens.rda")
@@ -559,16 +562,8 @@ for (j in 1){
     #cat("The total number of participants in", select_cohort, ": ", length(to_select), "\n")
     # source("3_reverse_dosimetry")
     
-    library(RMCSim)
-    library(foreach)
-    library(doParallel)
     
-    # Compile model code -----------------------------------------------------------
     model <- "gPYR_analytic_ss.model"
-    makemcsim(model = model, mxstep = 5000, dir = "MCSim")
-    
-    
-    # MCMC -------------------------------------------------------------------------
     
     
     system("rm *.out")
@@ -595,8 +590,6 @@ for (j in 1){
     
     for (i in 1:cores) file.copy(out_files[i], paste0("outputs/", out_files[i]))
     #file.remove(out_files)
-    
-    
     
   }
 }
