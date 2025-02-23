@@ -1,14 +1,12 @@
+library(readxl)    # read_excel
+library(foreign)   # read.xport
+library(survey)    # svydesign
+library(magrittr)  # %<>%
+library(dplyr)     # mutate
 
-#library(survey)
-#library(foreign) # read.xport
-#library(dplyr)
-#library(magrittr)
-#library(readxl) # read_excel
-#load("data/Wtns.rda")
-#load("data/Agens.rda")
-#load("data/modparms.rda")
-#library(readxl) # read_excel
-#library(doParallel) # registerDoParallel
+load("data/Wtns.rda")
+load("data/Agens.rda")
+load("data/modparms.rda")
 
 
 
@@ -30,10 +28,13 @@ names(demofiles) <- names(datafiles) <-
 #system("rm outputs/*.out")
 #######################################
 
-for (j in c(5:7)){
+cohort <- c("99-00", "01-02", "07-08", "09-10", "11-12", "13-14", "15-16")
+years <- c("1999", "2001", "2007", "2009", "2011", "2013", "2015")
+
+for (j in 1){
   
   select_cohort <- cohort[j]
-  locat <- paste0("saves/nhanes/", years[j])
+  locat <- paste0("data/nhanes/", years[j])
   demo_locat <- paste0(
     locat, "/", unique(demofiles[which(names(demofiles) == cohort[j])])
   )
@@ -167,7 +168,7 @@ for (j in c(5:7)){
     }
   }
   
-  codes_file <- "NHANEScodes_file.xlsx"
+  #codes_file <- "data/NHANEScodes_file.xlsx"
   creatinine <- "URXUCR"
   
   alldata <- merge(demo, cdta[,c(seq, chem2yrwt, chemvars, LODnames)],
@@ -262,13 +263,13 @@ for (j in c(5:7)){
   if ("URXCCC" %in% names(alldata)) 
     alldata$URXCCC[which(is.na(alldata$URXCCC))] <- -1
   
-  length(which(alldata$URX4FP == LD_URX4FP)) / length(alldata$URX4FP)
-  length(which(alldata$URXTCC == LD_URXTCC)) / length(alldata$URXTCC)
-  length(which(alldata$URXOPM == LD_URXOPM)) / length(alldata$URXOPM)
-  if ("URXCB3" %in% names(alldata)) 
-    length(which(alldata$URXCB3 == LD_URXCB3)) / length(alldata$URXCB3)
-  if ("URXCCC" %in% names(alldata)) 
-    length(which(alldata$URXCCC == LD_URXCCC)) / length(alldata$URXCCC)
+  #length(which(alldata$URX4FP == LD_URX4FP)) / length(alldata$URX4FP)
+  #length(which(alldata$URXTCC == LD_URXTCC)) / length(alldata$URXTCC)
+  #length(which(alldata$URXOPM == LD_URXOPM)) / length(alldata$URXOPM)
+  #if ("URXCB3" %in% names(alldata)) 
+  #  length(which(alldata$URXCB3 == LD_URXCB3)) / length(alldata$URXCB3)
+  #if ("URXCCC" %in% names(alldata)) 
+  #  length(which(alldata$URXCCC == LD_URXCCC)) / length(alldata$URXCCC)
   
   #
   alldata %<>% mutate(URX4FPND = ifelse(URX4FP == LD_URX4FP, LD_URX4FP*2^0.5/2, -1)) # set LOD = LOD/2 for t1
@@ -552,8 +553,50 @@ for (j in c(5:7)){
     writeLines(ori_tx, con = opt)
     writeLines(ori_chk_tx, con = opt_check)
     
+    
+    
     #cat("The total number of participants in", select_cohort, ": ", length(to_select), "\n")
-    source("2_reverse_dosimetry.R")
+    # source("3_reverse_dosimetry")
+    
+    library(RMCSim)
+    library(foreach)
+    library(doParallel)
+    
+    # Compile model code -----------------------------------------------------------
+    model <- "gPYR_analytic_ss.model"
+    makemcsim(model = model, mxstep = 5000, dir = "MCSim")
+    
+    
+    # MCMC -------------------------------------------------------------------------
+    
+    
+    system("rm *.out")
+    #system("rm -rf outputs")
+    if (!dir.exists("outputs")) dir.create("outputs")
+    
+    current_files <- list.files()
+    detectCores()
+    cores <- 3    
+    cl <- makeCluster(cores)
+    registerDoParallel(cl)
+    
+    strt <- Sys.time()
+    out <- foreach(i = 1:cores) %dopar% {
+      set.seed(i + 1)
+      RMCSim::mcsim(model = model, input = input, dir = "MCSim", parallel = T, check=F)
+    }
+    print(Sys.time() - strt)
+    
+    new_files <- setdiff(list.files(), current_files)
+    to_remove <- new_files[grep(".kernel|.in", new_files)]
+    file.remove(to_remove)
+    out_files <- setdiff(list.files(), current_files)
+    
+    for (i in 1:cores) file.copy(out_files[i], paste0("outputs/", out_files[i]))
+    #file.remove(out_files)
+    
+    
+    
   }
 }
 
@@ -561,50 +604,4 @@ for (j in c(5:7)){
 
 
 
-# Install & Load package -------------------------------------------------------
-# Use Linux (or WSL)
-
-#if (require(RMCSim)) remove.packages("RMCSim")
-#remotes::install_github("nanhung/RMCSim")
-
-library(RMCSim)
-#install_mcsim(version = "6.1.0")
-#mcsim_version()
-
-# Compile model code -----------------------------------------------------------
-model <- "gPYR_analytic_ss.model"
-#model <- "gPYR.model"
-#makemcsim(model = model, mxstep = 5000, dir = "MCSim")
-
-# Choose input file ------------------------------------------------------------
-#input <- "gPYR_analytic.mcmc.in"
-
-# MCMC -------------------------------------------------------------------------
-library(foreach)
-library(doParallel)
-
-system("rm *.out")
-#system("rm -rf outputs")
-if (!dir.exists("outputs")) dir.create("outputs")
-
-current_files <- list.files()
-detectCores()
-cores <- 3    
-cl <- makeCluster(cores)
-registerDoParallel(cl)
-
-strt <- Sys.time()
-out <- foreach(i = 1:cores) %dopar% {
-  set.seed(i + 1)
-  RMCSim::mcsim(model = model, input = input, dir = "MCSim", parallel = T, check=F)
-}
-print(Sys.time() - strt)
-
-new_files <- setdiff(list.files(), current_files)
-to_remove <- new_files[grep(".kernel|.in", new_files)]
-file.remove(to_remove)
-out_files <- setdiff(list.files(), current_files)
-
-for (i in 1:cores) file.copy(out_files[i], paste0("outputs/", out_files[i]))
-#file.remove(out_files)
 
