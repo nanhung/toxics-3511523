@@ -1,0 +1,184 @@
+#-------------------------------------------------------------------------------
+# gPYR_analytic_ss.model
+# 
+# Steady state solution of metabolites for pyrethroid PBPK model
+#-------------------------------------------------------------------------------
+
+# State variables for model outputs
+#
+Outputs = {
+  AUri3PBAng,  # amount of 3PBA in urine (ng/kg BW/day)
+  AUriFPBAng,  # amount of 4F3PBA in urine (ng/kg BW/day)
+  AUriDBCAng,  # amount of DBCA in urine (ng/kg BW/day)
+  AUriDCCAcng, # amount of cis-DCCA in urine (ng/kg BW/day)
+  AUriDCCAtng, # amount of trans-DCCA in urine (ng/kg BW/day)
+  CUri3PBA,    # concentration of 3PBA in urine (ng/ml or ug/L)
+  CUriDBCA,    # concentration of DBCA in urine (ng/ml or ug/L)
+  CUriFPBA,    # concentration of FPBA in urine (ng/ml or ug/L)
+  CUriDCCAc,   # concentration of cis-DCCA in urine (ng/ml or ug/L)
+  CUriDCCAt,   # concentration of trans-DCCA in urine (ng/ml or ug/L)
+  CUriFPBA_ND,
+  CUriDBCA_ND,
+  CUri3PBA_ND,
+  CUriDCCAc_ND,
+  CUriDCCAt_ND
+};
+
+
+# Physiological parameter
+#-------------------------
+BW; # Bodyweight (kg)
+DailyCreatinine; # based on bayesmarker package (mg creatinine per day)
+UrineCreatinine; # Wambaugh et al. 2013 (mg creatinine per dl urine)
+
+# Exposure parameter (mg/kg BW /day)
+lnDLM_IngDose = -27.6;
+lnCYF_IngDose = -27.6;
+lnPRM_IngDose = -27.6;
+lnCPM_IngDose = -27.6;
+
+# Molecular weight (g/mole)  
+MWDLM = 505.2;
+MWPRM = 391.3;
+MWCPM = 416.3;
+MWCYF = 434.3;
+
+MW3PBA = 214.22;
+MWFPBA = 232.21;
+MWDBCA = 297.97;
+MWDCCA = 209.07;
+
+# Hyper parameter
+#----------------
+V_lnDLM_IngDose;
+V_lnCYF_IngDose;
+V_lnPRM_IngDose;
+V_lnCPM_IngDose;
+
+V_DLM_3PBA;
+V_DLM_DBCA;
+V_cisPRM_3PBA;
+V_cisPRM_DCCA;
+V_transPRM_3PBA;
+V_transPRM_DCCA;
+V_cisCPM_3PBA;
+V_cisCPM_DCCA;
+V_transCPM_3PBA;
+V_transCPM_DCCA;
+V_cisCYF_FPBA;
+V_cisCYF_DCCA;
+V_transCYF_FPBA;
+V_transCYF_DCCA;
+
+CPM_PRM = 0.0;
+
+ratio_cisPRM = 0.40;
+ratio_cisCPM = 0.42;
+ratio_cisCYF = 0.40;
+
+# Uptake rate constant (Quindroit et., 2019)
+DLM_KAC = 1.51;
+cisPRM_KAC = 0.52;
+transPRM_KAC = 1.3;
+cisCPM_KAC = 0.52;
+transCPM_KAC = 1.3;
+cisCYF_KAC = 0.52;
+transCYF_KAC = 1.3;
+
+# Fecal excretion rate (Quindroit et., 2019)
+DLM_KFecC = 0.59;
+cisPRM_KFecC = 0.39;
+transPRM_KFecC = 0.85;
+cisCPM_KFecC = 0.39;
+transCPM_KFecC = 0.85;
+cisCYF_KFecC = 0.39;
+transCYF_KFecC = 0.85;
+
+# Metabolic fraction
+DLM_3PBA  = 0.15;
+DLM_DBCA  = 0.73;
+cisPRM_3PBA = 0.37;
+cisPRM_DCCA = 0.37;
+transPRM_3PBA = 0.85;
+transPRM_DCCA = 0.61;
+cisCPM_3PBA = 0.16;
+cisCPM_DCCA = 0.32;
+transCPM_3PBA = 0.39;
+transCPM_DCCA = 0.57;
+cisCYF_FPBA  = 0.10;
+cisCYF_DCCA  = 0.27;
+transCYF_FPBA  = 0.23;
+transCYF_DCCA  = 0.35;
+
+
+Ve_CUri3PBA;
+Ve_CUriFPBA;
+Ve_CUriDBCA;
+Ve_CUriDCCAc;
+Ve_CUriDCCAt;
+
+Ve_CUri3PBA_ND;
+Ve_CUriFPBA_ND;
+Ve_CUriDBCA_ND;
+Ve_CUriDCCAc_ND;
+Vf_CUriDCCAt_ND;
+
+DLM_F;
+cisPRM_F;
+transPRM_F;
+cisCPM_F;
+transCPM_F;
+cisCYF_F;
+transCYF_F;
+
+lnDLM_Fx = 0;
+lnCYF_Fx = 0;
+lnPRM_Fx = 0;
+lnCPM_Fx = 0;
+
+Initialize {
+
+  lnCPM_IngDose = log(exp(lnPRM_IngDose) * CPM_PRM);
+  
+  DLM_F = DLM_KAC/(DLM_KAC+DLM_KFecC) * exp(lnDLM_Fx);
+  cisPRM_F = cisPRM_KAC/(cisPRM_KAC+cisPRM_KFecC)  * exp(lnPRM_Fx);
+  transPRM_F = transPRM_KAC/(transPRM_KAC+transPRM_KFecC) * exp(lnPRM_Fx);
+  cisCPM_F = cisCPM_KAC/(cisCPM_KAC+cisCPM_KFecC) * exp(lnCPM_Fx);
+  transCPM_F = transCPM_KAC/(transCPM_KAC+transCPM_KFecC) * exp(lnCPM_Fx);
+  cisCYF_F = cisCYF_KAC/(cisCYF_KAC+cisCYF_KFecC) * exp(lnCYF_Fx);
+  transCYF_F = transCYF_KAC/(transCYF_KAC+transCYF_KFecC) * exp(lnCYF_Fx);
+
+} # End of model initialization
+
+CalcOutputs { 
+  
+  AUri3PBAng = ((exp(lnDLM_IngDose) * DLM_3PBA * DLM_F * MW3PBA / MWDLM) +  
+                  (exp(lnPRM_IngDose) * ratio_cisPRM * cisPRM_F * cisPRM_3PBA * MW3PBA / MWPRM ) + 
+                  (exp(lnPRM_IngDose) * (1-ratio_cisPRM) * transPRM_F * transPRM_3PBA * MW3PBA / MWPRM) +
+                  (exp(lnCPM_IngDose) * ratio_cisCPM * cisCPM_F * cisCPM_3PBA * MW3PBA / MWCPM) + 
+                  (exp(lnCPM_IngDose) * (1-ratio_cisCPM ) * transCPM_F * transCPM_3PBA * MW3PBA / MWCPM)) * BW * 1e6;
+  AUriFPBAng = ((exp(lnCYF_IngDose) * ratio_cisCYF * cisCYF_F * cisCYF_FPBA * MWFPBA / MWCYF) + 
+                  (exp(lnCYF_IngDose) * (1-ratio_cisCYF) * transCYF_FPBA * MWFPBA / MWCYF)) * BW * 1e6;
+  
+  AUriDBCAng = exp(lnDLM_IngDose) * DLM_F * DLM_DBCA * (MWDBCA / MWDLM) * BW * 1e6;
+  # UEF = 36.24/(36.24+14.16) * 0.73 * (297.97/505.2) = 0.31
+  
+  AUriDCCAcng = ((exp(lnPRM_IngDose) * ratio_cisPRM * cisPRM_F * cisPRM_DCCA * MWDCCA / MWPRM) + 
+                   (exp(lnCPM_IngDose) * ratio_cisCPM * cisCPM_F * cisCPM_DCCA * MWDCCA / MWCPM) + 
+                   (exp(lnCYF_IngDose) * ratio_cisCYF * cisCYF_F * cisCYF_DCCA * MWDCCA / MWCYF)) * BW * 1e6;
+  AUriDCCAtng = ((exp(lnPRM_IngDose) * (1-ratio_cisPRM) * transPRM_F * transPRM_DCCA * MWDCCA / MWPRM) + 
+                   (exp(lnCPM_IngDose) * (1-ratio_cisCPM) * transCPM_F * transCPM_DCCA * MWDCCA / MWCPM) + 
+                   (exp(lnCYF_IngDose) * (1-ratio_cisCYF) * transCYF_F * transCYF_DCCA * MWDCCA / MWCYF)) * BW * 1e6;
+  CUri3PBA = AUri3PBAng / DailyCreatinine * (UrineCreatinine / 100); 
+  CUriFPBA = AUriFPBAng / DailyCreatinine * (UrineCreatinine / 100); 
+  CUriDBCA = AUriDBCAng / DailyCreatinine * (UrineCreatinine / 100); 
+  CUriDCCAc = AUriDCCAcng / DailyCreatinine * (UrineCreatinine / 100); 
+  CUriDCCAt = AUriDCCAtng / DailyCreatinine * (UrineCreatinine / 100);
+  CUriFPBA_ND = CUriFPBA; 
+  CUriDBCA_ND = CUriDBCA;
+  CUri3PBA_ND = CUri3PBA;
+  CUriDCCAc_ND = CUriDCCAc;
+  CUriDCCAt_ND = CUriDCCAt;
+} 
+
+End.
