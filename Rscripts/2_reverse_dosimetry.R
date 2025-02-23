@@ -34,6 +34,8 @@ names(demofiles) <- names(datafiles) <-
 cohort <- c("99-00", "01-02", "07-08", "09-10", "11-12", "13-14", "15-16")
 years <- c("1999", "2001", "2007", "2009", "2011", "2013", "2015")
 
+file.copy("MCSim/mcsim.gPYR_analytic_ss.model.exe", "mcsim.gPYR_analytic_ss.model.exe")
+
 for (j in 1){
   
   select_cohort <- cohort[j]
@@ -594,7 +596,7 @@ for (j in 1){
   }
 }
 
-
+file.remove("mcsim.gPYR_analytic_ss.model.exe")
 
 
 
