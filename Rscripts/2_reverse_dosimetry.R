@@ -322,12 +322,13 @@ for (j in 1){
   #}
 
 
-  total_groups <- length(unique(alldata$AgeGroup)) + 6
+  total_groups <- length(unique(alldata$AgeGroup)) + 1
 
-  gps <- c("Total", "BMI gt 30", "BMI lteq 30", 
-           "Male", "Female", "ReproAgeFemale", 
+  gps <- c("Total", 
            "6 - 11 years", "12 - 19 years", "20 - 65 years",
-           "over 65 years", "0 - 5 years")
+           "over 65 years", "0 - 5 years",
+           "BMI gt 30", "BMI lteq 30", 
+           "Male", "Female", "ReproAgeFemale")
            #levels(alldata$AgeGroup)) 
 
   if (j %in% c(1:2)) {
@@ -353,30 +354,30 @@ for (j in 1){
   #}
 
 
-  for (k in c(1,7,8,9,10,11)){
-  #for (k in seq(total_groups)){
+  #for (k in c(1,7,8,9,10,11)){
+  for (k in seq(total_groups)){
     if (k==1) {
       to_select <- c(1:dim(alldata)[1])
     } else if (k==2) {
-      to_select <- which(alldata$Obesity == "BMI gt 30")
-    } else if (k==3) {
-      to_select <- which(alldata$Obesity == "BMI lteq 30")
-    } else if (k==4) {
-      to_select <- which(alldata$RIAGENDR == "Male")
-    } else if (k==5) {
-      to_select <- which(alldata$RIAGENDR == "Female")
-    } else if (k==6) {
-      to_select <- which(alldata$ChildBearingAgeFemale == "ReproAgeFemale")
-    } else if (k==7) {
       to_select <- which(alldata$AgeGroup == gps[7])
-    } else if (k==8) {
+    } else if (k==3) {
       to_select <- which(alldata$AgeGroup == gps[8])
-    } else if (k==9) {
+    } else if (k==4) {
       to_select <- which(alldata$AgeGroup == gps[9])
-    } else if (k==10) {
+    } else if (k==5) {
       to_select <- which(alldata$AgeGroup == gps[10])
-    } else if (k==11) {
+    } else if (k==6) {
       to_select <- which(alldata$AgeGroup == gps[11])
+    } else if (k==7) {
+      to_select <- which(alldata$Obesity == "BMI gt 30")
+    } else if (k==8) {
+      to_select <- which(alldata$Obesity == "BMI lteq 30")
+    } else if (k==9) {
+      to_select <- which(alldata$RIAGENDR == "Male")
+    } else if (k==10) {
+      to_select <- which(alldata$RIAGENDR == "Female")
+    } else if (k==11) {
+      to_select <- which(alldata$ChildBearingAgeFemale == "ReproAgeFemale")
     }
     
     
