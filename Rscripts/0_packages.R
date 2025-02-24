@@ -10,7 +10,7 @@ RMCSim::install_mcsim(version = "6.1.0")
 
 # Install other R packages
 pkgs <- c("ggplot2", "dplyr", "survey",  "magrittr", "foreach", "doParallel", 
-          "readxl", "foreign")
+          "readxl", "foreign", "purrr", "rstan", "data.table")
 
 for (i in seq(length(pkgs))){
   pac <- pkgs[i]
