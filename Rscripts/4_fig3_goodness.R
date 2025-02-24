@@ -67,6 +67,6 @@ p1 <- ggplot(data = df, aes(x=Data, y=Prediction, color = Var, shape = Var)) +
   xlab("NHANES biomonitoring data (ug/L)") +
   ylab("PBPK prediction (ug/L)")
 
-png("fig3_goodness.png", width = 3200, height = 2700, res = 350)
+png("figures/fig3_goodness.png", width = 3200, height = 2700, res = 350)
 p1
 dev.off()
