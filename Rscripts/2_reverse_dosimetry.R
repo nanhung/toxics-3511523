@@ -36,7 +36,7 @@ years <- c("1999", "2001", "2007", "2009", "2011", "2013", "2015")
 
 file.copy("MCSim/mcsim.gPYR_analytic_ss.model.exe", "mcsim.gPYR_analytic_ss.model.exe")
 
-for (j in 1){
+for (j in 1:2){
   
   select_cohort <- cohort[j]
   locat <- paste0("data/nhanes/", years[j])
@@ -364,15 +364,15 @@ for (j in 1){
     if (k==1) {
       to_select <- c(1:dim(alldata)[1])
     } else if (k==2) {
-      to_select <- which(alldata$AgeGroup == gps[7])
+      to_select <- which(alldata$AgeGroup == gps[2])
     } else if (k==3) {
-      to_select <- which(alldata$AgeGroup == gps[8])
+      to_select <- which(alldata$AgeGroup == gps[3])
     } else if (k==4) {
-      to_select <- which(alldata$AgeGroup == gps[9])
+      to_select <- which(alldata$AgeGroup == gps[4])
     } else if (k==5) {
-      to_select <- which(alldata$AgeGroup == gps[10])
+      to_select <- which(alldata$AgeGroup == gps[5])
     } else if (k==6) {
-      to_select <- which(alldata$AgeGroup == gps[11])
+      to_select <- which(alldata$AgeGroup == gps[6])
     } else if (k==7) {
       to_select <- which(alldata$Obesity == "BMI gt 30")
     } else if (k==8) {
@@ -568,7 +568,6 @@ for (j in 1){
     model <- "gPYR_analytic_ss.model"
     
     
-    system("rm *.out")
     #system("rm -rf outputs")
     if (!dir.exists("outputs")) dir.create("outputs")
     
@@ -591,8 +590,9 @@ for (j in 1){
     out_files <- setdiff(list.files(), current_files)
     
     for (i in 1:cores) file.copy(out_files[i], paste0("outputs/", out_files[i]))
-    #file.remove(out_files)
-    
+    #file.remove(out_files) 
+    system("rm *.out")
+
   }
 }
 
