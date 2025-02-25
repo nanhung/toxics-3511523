@@ -36,7 +36,7 @@ years <- c("1999", "2001", "2007", "2009", "2011", "2013", "2015")
 
 file.copy("MCSim/mcsim.gPYR_analytic_ss.model.exe", "mcsim.gPYR_analytic_ss.model.exe")
 
-for (j in 1:2){
+for (j in 3:7){
   
   select_cohort <- cohort[j]
   locat <- paste0("data/nhanes/", years[j])
