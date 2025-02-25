@@ -1,0 +1,73 @@
+# gPYR_analytic_3met_t2_check.mcmc.in
+# MCMC simulation file for gPYR_analytic_ss.model
+
+Integrate (Lsodes, 1e-9, 1e-9, 1);
+MCMC ("MCMC.check.out","MCMC.check.dat", # name of output file
+      "",                    # name of data file
+      240000,1,              # iterations, print predictions flag
+      10, 80000,             # printing frequency, iters to print
+      10101010);             # random seed 
+
+Level { # Population Level
+  
+  # Model/measurement error and likelihood
+  Distrib (Ve_CUri3PBA, HalfNormal, 0.3) 
+  Distrib (Ve_CUriFPBA, HalfNormal, 0.3)
+  Distrib (Ve_CUriDCCAt, HalfNormal, 0.3)
+  #Distrib (Ve_CUriDBCA, HalfNormal, 0.3);
+  #Distrib (Ve_CUriDCCAc, HalfNormal, 0.3);
+  
+  lnDLM_IngDose = -13.8;
+  #Distrib(lnDLM_IngDose, TruncNormal, -27.6, 4.6, -55.3, 0.000) # fixed due to bad convergence
+  Distrib(lnCYF_IngDose, TruncNormal, -13.8, 4.6, -27.6, 0.000)
+  Distrib(lnPRM_IngDose, TruncNormal, -13.8, 4.6, -27.6, 0.000)
+  #Distrib(lnCPM_IngDose,   Uniform,  -27.63, 0.0)
+  
+
+  # LogNormal
+  #Distrib( CPM_PRM, TruncLogNormal, 0.1, 2, 0.01, 1) # Based on PUR data 
+  CPM_PRM = 0.1; # Based on PUR data
+  
+  # V_
+  #Distrib(V_lnDLM_IngDose, InvGamma , 2.25, 5.0) # Assume: CU=2 and CV=2
+  Distrib(V_lnCYF_IngDose, InvGamma , 2.25, 5.0)
+  Distrib(V_lnPRM_IngDose, InvGamma , 2.25, 5.0)
+  #Distrib(V_CPM_IngDose, InvGamma , 2.25, 5.0)
+  
+  # large sample size; sd = LOD/2
+  Likelihood (CUri3PBA_ND,  Normal, Prediction(CUri3PBA_ND),  0.05)
+  Likelihood (CUriFPBA_ND,  Normal, Prediction(CUriFPBA_ND),  0.05) #
+  Likelihood (CUriDCCAt_ND, Normal, Prediction(CUriDCCAt_ND), 0.3) #
+  #Likelihood (CUriDBCA_ND, Normal, Prediction(CUriDBCA_ND), 0.033)
+  #Likelihood (CUriDCCAc_ND, Normal, Prediction(CUriDCCAc_ND), 0.033)
+  
+  Likelihood (CUri3PBA, LogNormal_v, Prediction(CUri3PBA), Ve_CUri3PBA)
+  Likelihood (CUriFPBA, LogNormal_v, Prediction(CUriFPBA), Ve_CUriFPBA)
+  Likelihood (CUriDCCAt, LogNormal_v, Prediction(CUriDCCAt), Ve_CUriDCCAt)
+  #Likelihood (CUriDBCA, LogNormal_v, Prediction(CUriDBCA), Ve_CUriDBCA)
+  #Likelihood (CUriDCCAc, LogNormal_v, Prediction(CUriDCCAc), Ve_CUriDCCAc)
+  
+  Level { # Individual Level
+    
+    # exposure parameters
+    #Distrib(lnDLM_IngDose,   TruncNormal_v, lnDLM_IngDose,   V_lnDLM_IngDose, -55.3, 0.000)
+    Distrib(lnCYF_IngDose,   TruncNormal_v, lnCYF_IngDose,   V_lnCYF_IngDose, -27.6, 0.000)
+    Distrib(lnPRM_IngDose,   TruncNormal_v, lnPRM_IngDose,   V_lnPRM_IngDose, -27.6, 0.000)
+    #Distrib(lnCPM_IngDose,   TruncNormal_v, CPM_IngDose,   1, 0.01, 10)
+        
+    # Frac_met - TruncNormal_v 25% COV 
+    #Distrib( DLM_3PBA, TruncNormal_v, 0.15, 0.0014, 0.01, 1)
+    #Distrib( DLM_DBCA, TruncNormal_v, 0.73, 0.0333, 0.01, 1)
+    #Distrib( cisPRM_3PBA, TruncNormal_v, 0.37, 0.0086, 0.01, 1)
+    #Distrib( cisPRM_DCCA, TruncNormal_v, 0.37, 0.0086, 0.01, 1)
+    #Distrib( transPRM_3PBA, TruncNormal_v, 0.3, 0.0056, 0.01, 1)
+    #Distrib( transPRM_DCCA, TruncNormal_v, 0.61, 0.0233, 0.01, 1)
+    #Distrib( cisCYF_FPBA, TruncNormal_v, 0.1, 6e-04, 0.01, 1)
+    #Distrib( cisCYF_DCCA, TruncNormal_v, 0.27, 0.0046, 0.01, 1)
+    #Distrib( transCYF_FPBA, TruncNormal_v, 0.23, 0.0033, 0.01, 1)
+    #Distrib( transCYF_DCCA, TruncNormal_v, 0.35, 0.0077, 0.01, 1)
+    #Distrib( cisCPM_3PBA, TruncNormal_v, 0.16, 0.0016, 0.01, 1)
+    #Distrib( cisCPM_DCCA, TruncNormal_v, 0.32, 0.0064, 0.01, 1)
+    #Distrib( transCPM_3PBA, TruncNormal_v, 0.39, 0.0095, 0.01, 1)
+    #Distrib( transCPM_DCCA, TruncNormal_v, 0.57, 0.0203, 0.01, 1)
+    

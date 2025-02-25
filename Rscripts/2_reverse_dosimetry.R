@@ -36,7 +36,7 @@ years <- c("1999", "2001", "2007", "2009", "2011", "2013", "2015")
 
 file.copy("MCSim/mcsim.gPYR_analytic_ss.model.exe", "mcsim.gPYR_analytic_ss.model.exe")
 
-for (j in 3:7){
+for (j in 5:7){
   
   select_cohort <- cohort[j]
   locat <- paste0("data/nhanes/", years[j])
@@ -278,7 +278,7 @@ for (j in 3:7){
   
   #
   alldata %<>% mutate(URX4FPND = ifelse(URX4FP == LD_URX4FP, LD_URX4FP*2^0.5/2, -1)) # set LOD = LOD/2 for t1
-  #alldata %<>% mutate(URX4FPND = ifelse(URX4FP == LD_URX4FP,  0, -1)) # set LOD = 0 for t2
+  #alldata %<>% mutate(URX4FPND = ifelse(URX4FP == LD_URX4FP,  0, -1)) # set LOD = 0
   alldata$URX4FP[which(alldata$URX4FP == LD_URX4FP)] <- -1
   alldata %<>% mutate(URXTCCND = ifelse(URXTCC == LD_URXTCC, LD_URXTCC*2^0.5/2, -1))
   #alldata %<>% mutate(URXTCCND = ifelse(URXTCC == LD_URXTCC, 0, -1))
@@ -337,11 +337,11 @@ for (j in 3:7){
            #levels(alldata$AgeGroup)) 
 
   if (j %in% c(1:2)) {
-    opt <- "MCSim/gPYR_analytic_5met_t2.mcmc.in"
-    opt_check <- "MCSim/gPYR_analytic_5met_t2_check.mcmc.in"
+    opt <- "MCSim/gPYR_analytic_5met.mcmc.in"
+    opt_check <- "MCSim/gPYR_analytic_5met_check.mcmc.in"
   } else if (j %in% c(3:4)) {
-    opt <- "MCSim/gPYR_analytic_4met_t2.mcmc.in"
-    opt_check <- "MCSim/gPYR_analytic_4met_t2_check.mcmc.in"
+    opt <- "MCSim/gPYR_analytic_4met.mcmc.in"
+    opt_check <- "MCSim/gPYR_analytic_4met_check.mcmc.in"
   } else if (j %in% c(5:7)) {
     opt <- "MCSim/gPYR_analytic_3met.mcmc.in"
     opt_check <- "MCSim/gPYR_analytic_3met_check.mcmc.in"
@@ -436,12 +436,12 @@ for (j in 3:7){
       #file.copy("MCSim/gPYR_analytic_5met.mcmc.in", copy_file)
       #file.copy("MCSim/gPYR_analytic_5met_check.mcmc.in", copy_check_file)
       #input <- paste0("gPYR_analytic_5met_", select_cohort, "_", gps[k], ".mcmc.in")
-      copy_file <- paste0("MCSim/gPYR_analytic_5met_t2_", select_cohort, "_", gps[k], ".mcmc.in") 
-      copy_check_file <- paste0("MCSim/gPYR_analytic_5met_check_t2_", select_cohort, "_", gps[k], ".mcmc.in")
+      copy_file <- paste0("MCSim/gPYR_analytic_5met_", select_cohort, "_", gps[k], ".mcmc.in") 
+      copy_check_file <- paste0("MCSim/gPYR_analytic_5met_check_", select_cohort, "_", gps[k], ".mcmc.in")
       invisible(suppressWarnings(file.remove(c(copy_file, copy_check_file))))
-      file.copy("MCSim/gPYR_analytic_5met_t2.mcmc.in", copy_file)
-      file.copy("MCSim/gPYR_analytic_5met_t2_check.mcmc.in", copy_check_file)
-      input <- paste0("gPYR_analytic_5met_t2_", select_cohort, "_", gps[k], ".mcmc.in")
+      file.copy("MCSim/gPYR_analytic_5met.mcmc.in", copy_file)
+      file.copy("MCSim/gPYR_analytic_5met_check.mcmc.in", copy_check_file)
+      input <- paste0("gPYR_analytic_5met_", select_cohort, "_", gps[k], ".mcmc.in")
     } else if (j %in% c(3:4)) {
       ori_tx  <- readLines(opt)
       sink(opt, append = TRUE) 
@@ -492,12 +492,12 @@ for (j in 3:7){
       #file.copy("MCSim/gPYR_analytic_4met_t1.mcmc.in", copy_file)
       #file.copy("MCSim/gPYR_analytic_4met_t1_check.mcmc.in", copy_check_file)
       #input <- paste0("gPYR_analytic_4met_t1_", select_cohort, "_", gps[k], ".mcmc.in")
-      copy_file <- paste0("MCSim/gPYR_analytic_4met_t2_", select_cohort, "_", gps[k], ".mcmc.in") 
-      copy_check_file <- paste0("MCSim/gPYR_analytic_4met_t2_check_", select_cohort, "_", gps[k], ".mcmc.in")
+      copy_file <- paste0("MCSim/gPYR_analytic_4met_", select_cohort, "_", gps[k], ".mcmc.in") 
+      copy_check_file <- paste0("MCSim/gPYR_analytic_4met_check_", select_cohort, "_", gps[k], ".mcmc.in")
       invisible(suppressWarnings(file.remove(c(copy_file, copy_check_file))))
-      file.copy("MCSim/gPYR_analytic_4met_t2.mcmc.in", copy_file)
-      file.copy("MCSim/gPYR_analytic_4met_t2_check.mcmc.in", copy_check_file)
-      input <- paste0("gPYR_analytic_4met_t2_", select_cohort, "_", gps[k], ".mcmc.in")
+      file.copy("MCSim/gPYR_analytic_4met.mcmc.in", copy_file)
+      file.copy("MCSim/gPYR_analytic_4met_check.mcmc.in", copy_check_file)
+      input <- paste0("gPYR_analytic_4met_", select_cohort, "_", gps[k], ".mcmc.in")
     } else if (j %in% c(5:7)) {
       ori_tx  <- readLines(opt)
       sink(opt, append = TRUE)
