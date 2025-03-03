@@ -68,18 +68,18 @@
 %=================================================================
 % Full title of the paper (Capitalized)
 \Title{Biomonitoring-Based Risk Assessment of Pyrethroid Exposure in the U.S.
-using High-Throughput and Physiologically Based Toxicokinetic Models} 
+using High-Throughput and Physiologically Based Kinetic Models} 
 
 % MDPI internal command: Title for citation in the left column
 \TitleCitation{Biomonitoring-Based Risk Assessment of Pyrethroid Exposure in
-the U.S. using High-Throughput and Physiologically Based Toxicokinetic Models}
+the U.S. using High-Throughput and Physiologically Based Kinetic Models}
 
 % Author Orchid ID: enter ID or remove command
 \newcommand{\orcidauthorA}{0000-0003-0163-2766} 
 %\newcommand{\orcidauthorB}{0000-0000-0000-000X} % Add \orcidB{} behind the author's name
 
 % Authors, for the paper (add full first names)
-\Author{Nan-Hung Hsieh $^{1}$*\orcidA{} and Eric S. Kwok $^{1}$}
+\Author{Nan-Hung Hsieh*\orcidA{} and Eric S. Kwok}
 
 %\longauthorlist{yes}
 
@@ -101,11 +101,9 @@ the U.S. using High-Throughput and Physiologically Based Toxicokinetic Models}
 \AuthorCitation{Hsieh, N.-H.; Kwok, S.E.}
 
 % Affiliations / Addresses (Add [1] after \address if there is only one affiliation.)
-\address{%
-$^{1}$ \quad Human Exposure \& Health Effects Modeling Section, Human
-Health Assessment Branch, Department of Pesticide Regulation, California
-Environmental Protection Agency, Sacramento, CA, USA; \\
-}
+\address[1]{Human Exposure \& Health Effects Modeling Section, Human Health
+Assessment Branch, Department of Pesticide Regulation, California Environmental
+Protection Agency, Sacramento, CA, USA; \\ }
 
 % Contact information of the corresponding author
 %\corres{Correspondence: e-mail@e-mail.com; Tel.: (optional; include country code; if there are multiple corresponding authors, add author initials) +xx-xxxx-xxx-xxxx (F.L.)}
@@ -144,8 +142,8 @@ associated with pyrethroid exposures, underscoring their potential for
 future applications in following tracking and health risk assessment.}
 
 % Keywords
-\keyword{Reverse dosimetry; Biomonitoring; High-throughput model;
-Physiologically based kinetic model; Pyrethroids}
+\keyword{Reverse dosimetry; Bayeisan; Pyrethroids; Urinary metabolites,
+Exposure risk}
 
 % The fields PACS, MSC, and JEL may be left empty or commented out if not applicable
 %\PACS{J0101}
@@ -199,40 +197,38 @@ Physiologically based kinetic model; Pyrethroids}
 \section{Introduction}\label{introduction}
 
 Pyrethroids, synthetic insecticides prevalent in residential and
-agricultural pest control, have raised health concerns due to their
-extensive use and potential adverse effects. Their usage has
+agricultural pest control, have raised health concerns due to their extensive
+use and potential adverse effects \citep{burns2018pyrethroid}. Their usage has
 significantly increased in recent decades both in the United States and
-globally. Mounting evidence suggest that exposure to pyrethroids are
-linked to adverse health effects, including diabetes, neurotoxicity, and
-cardiovascular disease. Consequently, scientists and researchers have
-actively monitored and reconstructed pyrethroid exposure among
-residential and occupational populations.
+globally. Mounting evidence suggest that exposure to pyrethroids are linked to
+adverse health effects, including diabetes, neurotoxicity, and cardiovascular
+disease. Consequently, scientists and researchers have actively monitored and
+reconstructed pyrethroid exposure among residential and occupational
+populations \citep{zartarian2012quantifying, bravo2022occupational}.
 
 Various exposure tools have been developed to estimate both aggregate
 and cumulative exposure doses of current-use pesticides, including
 pyrethroids
 \citep{tulve2011methodologies, zartarian2012quantifying, xue2014epa}. In
-earlier research, \citet{tulve2011methodologies} applied three
-methodologies developed by the United States Environmental Protection
-Agency (U.S. EPA), including The Standard Operating Procedures for
-Residential Pesticide Exposure Assessment \citep{us2012standard}, Draft
-Protocol for Measuring Children's Non-Occupational Exposure to
-Pesticides by all Relevant Pathways \citep{us2001draft}, and the
-Stochastic Human Exposure and Dose Simulation (SHEDS) Model for
-Multimedia, Multipathway Pollutants, to estimate cumulative residential
-exposures to pyrethroids for children aged 4-6 years. Among these
-approaches, the SHEDS framework was initially developed to estimate
-children's residential exposure and dose to chlorpyrifos via dermal
-contact and non-dietary ingestion \citep{zartarian2000modeling} and has
-been applied to several metals, polychlorinated biphenyls, and
-pyrethroids for regulatory decisions
-\citep{tulve2011methodologies, xue2015modeling, zartarian2017children}.
-For pyrethroids, \citet{zartarian2012quantifying} used permethrin as a
-benchmark to verify the performance of exposure prediction models, such
-as the physiologically based kinetic (PBK) model
+earlier research, \citet{tulve2011methodologies} applied three methodologies
+developed by the United States Environmental Protection Agency (U.S. EPA),
+including The Standard Operating Procedures for Residential Pesticide Exposure
+Assessment \citep{us2012standard}, Draft Protocol for Measuring Children's
+Non-Occupational Exposure to Pesticides by all Relevant Pathways
+\citep{us2001draft}, and the Stochastic Human Exposure and Dose Simulation
+(SHEDS) Model for Multimedia, Multipathway Pollutants, to estimate cumulative
+residential exposures to pyrethroids for children aged 4-6 years. Among these
+approaches, the SHEDS framework was initially developed to estimate children's
+residential exposure and dose to chlorpyrifos via dermal contact and
+non-dietary ingestion \citep{zartarian2000modeling} and has been applied to
+several metals, polychlorinated biphenyls, and pyrethroids for regulatory
+decisions \citep{tulve2011methodologies, xue2015modeling,
+zartarian2017children}. For pyrethroids, \citet{zartarian2012quantifying} used
+permethrin as a benchmark to verify the performance of exposure prediction
+models, such as the physiologically based kinetic (PBK) model
 \citep{tornero2012pharmacokinetic} and the SHEDS high-throughput model
-\citep{isaacs2014sheds}, due to the abundance of experimental exposure
-and toxicokinetic (TK) data.
+\citep{isaacs2014sheds}, due to the abundance of experimental exposure and
+toxicokinetic (TK) data.
 
 Biomonitoring is widely recognized as a reliable method for quantifying
 human exposure to pyrethroids in populations
@@ -278,28 +274,26 @@ approaches, such as SHEDS \citep{isaacs2014sheds} and the consensus
 model with multiple forward exposure model predictions
 \citep{ring2018consensus}.
 
-To better predict chemical intake, physiologically based kinetic (PBK)
-models have been applied in several research studies
-\citep{tan2006use, allen2007use, lyons2008computational, tornero2012pharmacokinetic, moreau2017using}.
-This sophisticated modeling approach considers absorption, distribution,
-metabolism, and elimination processes in the body. Compared to the U.S.
-EPA's high-throughput approach, which is based on generic TK model and
-that assumes steady-state equilibrium with mass balance (100\%
-absorption) to simplified model structure, PBK models provide more
-accurate parameter estimations and have been validated with experimental
-TK data. A U.S. EPA study noted that ``The SEEM approach evaluates
-predictors of exposure based on how well they correlate with estimates
-of chemical intake rate from biomonitoring'' \citep{ring2018consensus}.
-Thus, the reliability of chemical intake rates inferred from
-biomonitoring data is crucial for determining model performance. It is
-essential to examine the biomonitoring data quality and its
-representativeness alongside model parameters. Given the various
-prediction tools developed, each with strengths and uncertainties in
-exposure prediction, integrating information from different tools can
-strengthen the scientific rigor of the exposure assessment process
-\citep{moreau2017using}.
+To better predict chemical intake, physiologically based kinetic (PBK) models
+have been applied in several research studies \citep{tan2006use, allen2007use,
+lyons2008computational, tornero2012pharmacokinetic, moreau2017using}. This
+sophisticated modeling approach considers absorption, distribution, metabolism,
+and elimination processes in the body. Compared to the U.S. EPA's
+high-throughput approach, which is based on generic TK model and that assumes
+steady-state equilibrium with mass balance (100\% absorption) to simplified
+model structure, PBK models provide more accurate parameter estimations and
+have been validated with experimental TK data. A study conducted by the U.S.
+EPA reported that ``The SEEM approach evaluates predictors of exposure based on
+how well they correlate with estimates of chemical intake rate from
+biomonitoring'' \citep{ring2018consensus}. Thus, the reliability of chemical
+intake rates inferred from biomonitoring data is crucial for determining model
+performance. It is essential to examine the biomonitoring data quality and its
+representativeness alongside model parameters. Given the various prediction
+tools developed, each with strengths and uncertainties in exposure prediction,
+integrating information from different tools can strengthen the scientific
+rigor of the exposure assessment process \citep{moreau2017using}.
 
-The primary purpose of this study is to understand and track the
+The primary purpose of this study was to understand and track the
 exposure and dosimetry conditions of pyrethroids in the U.S. population
 based on available biomonitoring data and assess human health risks.
 This study employs an open-sourced and well-developed pyrethroid PBK
@@ -322,8 +316,8 @@ data-driven exposure assessments.
 \subsection{Problem definition}\label{problem-definition}
 
 Figure \ref{fig1} illustrates the concept of the study approach. Several
-uncertainties that may impact the current modeling process and the
-current solutions were addressed as follows:
+uncertainties that may impact the current modeling process and their solutions
+were addressed as follows:
 
 \begin{itemize}
 \item
@@ -651,7 +645,7 @@ potential temporal influence on exposure levels.
 
 The refined PBK model performed well with human TK experiments, which
 includes 176 data points from 17 TK profiles of 5 pyrethroid
-metabolites. Using the default parameter values, 99\% of the predictions
+metabolites (Figure \ref{fig:figa2}). Using the default parameter values, 99\% of the predictions
 fall within a 10-fold range, approximately 75\% within a 3-fold range,
 and 65\% within a 2-fold range of the observed values. The calibrated
 PBK model was used to estimate the daily intakes of the four pyrethroid
@@ -952,7 +946,7 @@ kinetic (PBK) approach. The Fance study estimated median daily intakes of
 cypermethrin, respectively. Additionally, no risks were anticipated from the
 reconstructed pyrethroid exposures. Furthmore, a China study found that
 metabolite levels among 481 infants were similar or slightly higher than in the
-US population \citep{wu2013urinary}.
+U.S. population \citep{wu2013urinary}.
 
 Previous research shows that chronic NOAELs are similar to or higher
 than the acute POD used in this study
@@ -1022,13 +1016,33 @@ the relatively short half-lives of pyrethroids, it is likely to
 underestimate intake rates through spot urine samples from NHANES.
 Additionally, \citet{barr2010urinary} indicated that morning samples had
 significantly higher concentrations than those collected in the
-afternoon and evening. The PBK model provides an opportunity to estimate
-chemical-specific human variability TK adjustment factors to replace the
-default uncertainty factor of 3.16 \citep{chiu_advancing_2018}. However,
-this method did not work in the present study since the only
-uncertainty/variability is from exposure. In the modeling process,
-unlike high-throughput model, the PBK model needs adequate animal
-experiment data to develop the robust model in exposure prediction.
+afternoon and evening. 
+
+Sampling time, frequency, and detection limits significantly influence the
+accuracy and interpretation of biomonitoring data, affecting predictions of
+chemical intake \citep{hays2007biomonitoring}. Specifically, 1) the timing of
+sample collection impacts measured concentrations of chemicals and their
+metabolites. For pyrethroids, which have short biological half-lives, urinary
+levels fluctuate markedly depending on exposure timing. Sampling too early or
+too late may misrepresent actual exposure. 2) The frequency of sampling
+determines how well exposure trends are captured. Spot urine samples reflect
+only recent exposures and may not represent chronic levels, whereas 24-hour
+collections average fluctuations for a more reliable picture.
+\citet{hays2007biomonitoring} noted that peak urinary concentrations can exceed
+steady-state levels by twofold, making single-spot samples less suitable for
+comparison to reference values. 3) Analytical sensitivity governs the detection
+of low-level exposures. High detection limits may miss subtle but significant
+exposures, underestimating risk, while overly sensitive limits might detect
+trace, biologically irrelevant levels, potentially raising undue concern.
+Together, these factors shape the reliability of biomonitoring results and
+their use in exposure prediction.
+
+The PBK model provides an opportunity to estimate chemical-specific human
+variability TK adjustment factors to replace the default uncertainty factor of
+3.16 \citep{chiu_advancing_2018}. However, this method did not work in the
+present study since the only uncertainty/variability is from exposure. In the
+modeling process, unlike high-throughput model, the PBK model needs adequate
+animal experiment data to develop the robust model in exposure prediction.
 
 Regarding to the data availability, the newly accessible biomonitoring
 data from NHANES used in the current study lags by nearly a decade. This
@@ -1120,9 +1134,8 @@ high-throughput reverse dosimetry model can be found in the U.S.EPA GitHub repos
 %\useofartificialintelligence{Please describe in detail any and all uses of artificial intelligence (AI) or AI-assisted tools used in the preparation of the manuscript. This may include, but is not limited to, language translation, language editing and grammar, or generating text. Alternatively, please state that “AI or AI-assisted tools were not used in drafting any aspect of this manuscript”.}
 
 \acknowledgments{This work was supported by the California Department of
-Pesticide Regulation. The authors want to thank staff member,
-Dr.~Shelley DuTeaux and Dr.~Gayatri Sankaran, for providing helpful
-comments.}
+Pesticide Regulation. The authors want to thank Dr.~Shelley DuTeaux and
+Dr.~Gayatri Sankaran, for providing helpful comments.}
 
 \conflictsofinterest{The authors declare no competing interests. The
 views expressed in this article are those of the authors and do not
@@ -1176,7 +1189,7 @@ USDA & United States Department of Agriculture
 
 \begin{table}[H]
 \begin{adjustwidth}{-4cm}{}
-\caption{Measured pyrethroids metabolites and the limits of detection across each NHANES cycle.}
+  \caption{Measured pyrethroids metabolites and the limits of detection ($\mu$g/L) across each NHANES cycle.}
 \label{tab:taba1}
 \begin{tabular}{lrrrrrrr}
 \toprule
@@ -1301,6 +1314,14 @@ cis-DCCA & 41.59 & 33.08 &  &  &  &  & \\
 \hfill
 \end{adjustwidth}
 \caption{Cumulative distribution of urinary pyrethroid metabolite concentrations across different age groups.}\label{fig:figa1}
+\end{figure}
+
+\begin{figure}[H]
+\begin{adjustwidth}{-4cm}{}
+\includegraphics[width=\linewidth]{figures/figa2}
+\hfill
+\end{adjustwidth}
+\caption{Evaluation of model performance of refined PBK model with human toxicokinetic experiments.}\label{fig:figa2}
 \end{figure}
 
 
