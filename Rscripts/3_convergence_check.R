@@ -12,9 +12,18 @@ pop <- c("Total",
   "over 65 years", 
   "0 - 5 years")
 
-#j <- 1
-for (j in seq(2)) {
-  cat(paste(cohort[j], "\n"))
+# Create report
+opt <- "MCSim/report_mcmc.log"
+cat("", file = opt) 
+sink(opt, append=TRUE)  
+cat(paste0("Starting time: ", Sys.time()), "\n\n")
+sink()
+
+for (j in seq(7)) {
+  #
+  sink(opt, append=TRUE)  
+  cat("\n", paste(cohort[j], "\n", "====================================\n"))
+  sink()
   #
   if(j == 1) { 
     k <- 4 
@@ -24,14 +33,15 @@ for (j in seq(2)) {
   #
   for (age in seq(k)) {
         if(j %in% c(1,2)){
-    out <- paste0("outputs/gPYR_analytic_5met_t2_", cohort[j], "_", pop[age], "_", seeds, ".out")
+    out <- paste0("outputs/gPYR_analytic_5met_", cohort[j], "_", pop[age], "_", seeds, ".out")
   } else if (j %in% c(3:4)){
-    out <- paste0("outputs/gPYR_analytic_4met_t2_", cohort[j], "_", pop[age], "_", seeds, ".out")
+    out <- paste0("outputs/gPYR_analytic_4met_", cohort[j], "_", pop[age], "_", seeds, ".out")
   } else if (j %in% c(5:7)){
-    out <- paste0("outputs/gPYR_analytic_3met_t2_", cohort[j], "_", pop[age], "_", seeds, ".out")
+    out <- paste0("outputs/gPYR_analytic_3met_", cohort[j], "_", pop[age], "_", seeds, ".out")
   }
   #
-  cat(paste(pop[age], "\n"))
+  sink(opt, append=TRUE)  
+  cat("\n", paste(pop[age], "\n")) 
   pars_name <- c("Ve_CUriFPBA(1)", "Ve_CUri3PBA(1)", "Ve_CUriDCCAt(1)",
     "Ve_CUriDBCA(1)", "Ve_CUriDCCAc(1)", 
     "lnCYF_IngDose(1)", "lnPRM_IngDose(1)", "lnDLM_IngDose(1)",
@@ -53,8 +63,9 @@ for (j in seq(2)) {
   dimnames(x)[[3]] <- names(data[[1]])
   dim(x)
   mnt <- monitor(x[, , pars_name], digit = 6, print = T)
+  sink()
   #
-  save_directory <- "MCSim/outputs"
+  save_directory <- "MCSim/saves"
   iters <- 1:dim(x)[1]
   rand.samp <- sample(iters, 1000)
   pyrs <- c(
@@ -64,9 +75,10 @@ for (j in seq(2)) {
   lPsampsPBK <- x[rand.samp, , pyrs] 
   dim(lPsampsPBK) <- c(3000,6)
   colnames(lPsampsPBK) <- pyrs
-  file_name <- paste("lPsamps-PBK_", pop[age], "_", 
+  file_name <- paste("mcsim-IPsamps_", pop[age], "_", 
     format(Sys.time(), "%Y-%m-%d"), ".RData", sep = "")
   save(lPsampsPBK, file = file.path(save_directory, cohort[j], file_name))
   }
   #
 }
+
