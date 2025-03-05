@@ -5,24 +5,15 @@
 #clear workspace
 rm(list = ls())
 
-# Function
+# Package
 library(deSolve)
-source("Model/model.R")
 
-#get paramFile
-chem = "CYP" 
-dose = "Oral" # or "IV" or "pub"
-age = "90d" # or "15d" or "10d" i.e.  any of the valid rat ages 
-param_file_name = paste(
-  chem, 
-  paste("params", dose, paste(age,".R","sep" = ""), sep="_"), 
-  sep = "/")
-param_file_name
-source(param_file_name)
+# Model and paramFile
+source("Rscripts/rat_pbk_sim/model.R")
+source("Rscripts/rat_pbk_sim/CYP_params_Oral_90d.R")
 
 # ORAL and IV
-#params[["PDOSE"]] <-5.48 * 0.42  # BBMD BMDL
-params[["PDOSE"]] <-2.03 * 0.42  # Wolansky
+params[["PDOSE"]] <-5.48 * 0.42  # BBMD BMDL
 params[["IVDOSE"]]<-0   # mg/kg
 
 #set simulation Parameters
@@ -150,19 +141,12 @@ modelOutput<- ode(y = state, times = times,method = "lsodes",
                   func = genericPyrethroidRatModel, parms = initial_params,
                   events = list(data = eventDat))
 result <- as.data.frame(modelOutput)
-head(result)
 
-#
-print(max(result$cpls))		#print plasma Cmax
-print(max(result$cbrn))		#print brain Cmax
+# Systematic POD
+cat("cis-CYP\n")
 auc_plasma <- sum(diff(result[, "time"]) * (result[-1, "cpls"] + result[-length(result), "cpls"]) / 2) 
 auc_brain <- sum(diff(result[, "time"]) * (result[-1, "cbrn"] + result[-length(result), "cbrn"]) / 2) 
-auc_plasma
-auc_brain
-
-#https://www.statology.org/ggplot-table/
 dosemetrics <- data.frame(organ=c('Plasma', 'Brain'),
   Cmax=c(max(result$cpls), max(result$cbrn)),
   AUC=c(auc_plasma, auc_brain))
-dosemetrics
-
+print(dosemetrics)

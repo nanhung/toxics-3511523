@@ -1,9 +1,19 @@
 library(RMCSim)
 library(dplyr)
 
+# POD
+source("Rscripts/rat_pbk_sim/DLM_Oral_POD_90d.R")
+source("Rscripts/rat_pbk_sim/CPM_Oral_POD_90d.R")
+source("Rscripts/rat_pbk_sim/TPM_Oral_POD_90d.R")
+source("Rscripts/rat_pbk_sim/CCF_Oral_POD_90d.R")
+source("Rscripts/rat_pbk_sim/TCF_Oral_POD_90d.R")
+source("Rscripts/rat_pbk_sim/CCP_Oral_POD_90d.R")
+source("Rscripts/rat_pbk_sim/TCP_Oral_POD_90d.R")
+
+
 # Load model
 file.copy("MCSim/mcsim.gPYR_pbk.model.exe", "mcsim.gPYR_pbk.model.exe")
-model <- "gPYR_PBPK.model"
+model <- "gPYR_pbk.model"
 
 # AUC calculation
 auc <- function(dat){

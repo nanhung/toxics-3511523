@@ -140,9 +140,10 @@ modelOutput<- ode(y = state, times = times,method = "lsodes",
 result <- as.data.frame(modelOutput)
 
 # Systematic POD
+cat("DLM\n")
 auc_plasma <- sum(diff(result[, "time"]) * (result[-1, "cpls"] + result[-length(result), "cpls"]) / 2) 
 auc_brain <- sum(diff(result[, "time"]) * (result[-1, "cbrn"] + result[-length(result), "cbrn"]) / 2) 
 dosemetrics <- data.frame(organ=c('Plasma', 'Brain'),
   Cmax=c(max(result$cpls), max(result$cbrn)),
   AUC=c(auc_plasma, auc_brain))
-dosemetrics
+print(dosemetrics)
