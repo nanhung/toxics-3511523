@@ -2,13 +2,14 @@ library(dplyr)
 library(ggplot2)
 library(scales)
 
-to_read <- c("MCSim/outputs/MCMC.check_9900.out",
-  "MCSim/outputs/MCMC.check_0102.out",
-  "MCSim/outputs/MCMC.check_0708.out",
-  "MCSim/outputs/MCMC.check_0910.out",
-  "MCSim/outputs/MCMC.check_1112.out",
-  "MCSim/outputs/MCMC.check_1314.out",
-  "MCSim/outputs/MCMC.check_1516.out")
+to_read <- c(
+  "MCSim/saves/MCMC.check_9900.out",
+  "MCSim/saves/MCMC.check_0102.out",
+  "MCSim/saves/MCMC.check_0708.out",
+  "MCSim/saves/MCMC.check_0910.out",
+  "MCSim/saves/MCMC.check_1112.out",
+  "MCSim/saves/MCMC.check_1314.out",
+  "MCSim/saves/MCMC.check_1516.out")
 cohort <- c("99-00", "01-02", "07-08", "09-10", "11-12", "13-14", "15-16")
 
 for (i in seq(7)){
