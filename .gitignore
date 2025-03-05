@@ -3,4 +3,5 @@
 *.pdf
 data/nhanes/*
 /outputs
-/MCSim/saves
+/MCSim/saves/*
+/bayesmarker/saves/*

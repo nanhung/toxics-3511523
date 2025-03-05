@@ -1,5 +1,6 @@
+# Packages
 library(dplyr) # bind_rows
-library(ggpubr) # ggscatter
+library(ggpubr) # ggscatter; need cmake
 library(scales)
 library(forcats) # fct_reveal
 library(tidyr)   # unite
@@ -9,20 +10,16 @@ library(EnvStats) # GeoMean
 library(cowplot)  # plot_grid
 library(ggdendro)
 
+# 
 all_cohorts_data <- c("99-00", "01-02", 
-                      #"03-04", "05-06", 
                       "07-08", "09-10", 
                       "11-12", "13-14", "15-16")
 
+pyr_P <-c("68359-37-5", # CYF CAS
+          "52645-53-1", # PRM CAS
+          "52918-63-5", # DLM CAS
+          "52315-07-8") # CPM CAS
 
-pyr_P <-c("68359-37-5", # CYF
-          "52645-53-1", # PRM
-          "52918-63-5", # DLM
-          "52315-07-8") # CPM
-
-
-#
-#cohort <- "11-12"
 for (cohort in all_cohorts_data){
   #
   OnlyPparms3 <- list.files(paste0("./bayesmarker/saves/", cohort,"/"), pattern='lPsamps-gm')
@@ -188,6 +185,12 @@ X.Bayesmarker <- X |> filter(Approach == 'High-throughput') |>
             Bayesmarker_upper = quantile(Prediction, 0.975),
             Bayesmarker_lower = quantile(Prediction, 0.025))
 XX <- full_join(X.Bayesmarker, X.PBK, by = c('Compound', 'Age', 'Cohort')) 
+
+XX |> mutate(ratio = Bayesmarker_median/PBK_median) |> 
+  mutate(consistency = ifelse(ratio > 10, 0, ifelse(ratio < 0.1, 0, 1))) |>
+  na.omit() |>
+  group_by(Compound) |> 
+  summarise(Located10fold = sum(consistency)/n())
 
 png("fig4_comparison.png", width = 1800, height = 1200, res = 300)
 XX |>
@@ -482,7 +485,7 @@ plot_ggdendro <- function(hcdata,
     p <- p + scale_color_manual(values = scale.color)
   }
   ylim <- -round(ymax * expand.y, 1)
-  p    <- p + expand_limits(y = ylim)
+  p <- p + expand_limits(y = ylim)
   p
 }
 

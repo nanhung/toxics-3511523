@@ -3,6 +3,7 @@
 
 library(readxl) # read_excel
 library(foreign) # read.xport
+library(survey) # svydesign
 
 get_NHANES_data <- function(codes_file = NULL, cohort = NULL, save_directory = NULL) {
   if (is.null(codes_file)){
@@ -337,4 +338,5 @@ for (j in seq(7)) {
 
 nhanes_data <- all_data
 save(nhanes_data, file="nhanes_data.RData")
+file.exists("nhanes_data.RData")
 
