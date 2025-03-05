@@ -1,0 +1,53 @@
+#------------------------------------------------------------------------------
+# gPYR_1y_CPM.mtc.in                          
+#------------------------------------------------------------------------------
+
+Integrate (Lsodes, 1e-9, 1e-9, 1);
+
+MonteCarlo ("gPYR_1y_CPM.mtc.out", 100, 56761.1164);
+
+# Age-specific parameter (1y)
+BW=10.14;
+HCT=0.359;
+VOLBLDC=0.0792;
+VOLFATC=0.373;
+VOLBRNC=0.081;
+VOLLIVC=0.0301;
+VOLRPC=0.0341;
+VOLGIC=0.0131;
+TV=0.13;
+DS=0.020;
+BF=350.0;
+FRFATC=0.076;
+FRBRNC=0.4131;
+FRLIVC=0.222;
+FRSPC=0.11;
+
+# Exposure uncertainty
+Distrib (IngDose_CPM, LogNormal, 2.25e-4, 1.13); 
+
+# Parameter uncertainty
+Distrib (u_lnFuPLS, TruncNormal, 0.0, 0.1, -0.2, 0.2); 
+Distrib (u_lnPBRN, TruncNormal, 0.0, 0.3, -0.9, 0.9); 
+Distrib (u_lnPFAT, TruncNormal, 0.0, 0.3, -0.9, 0.9); 
+Distrib (u_lnPGI, TruncNormal, 0.0, 0.3, -0.9, 0.9); 
+Distrib (u_lnPLIV, TruncNormal, 0.0, 0.3, -0.9, 0.9); 
+Distrib (u_lnPRP, TruncNormal, 0., 0.3, -0.9, 0.9); 
+Distrib (u_lnPSP, TruncNormal, 0.0, 0.3, -0.9, 0.9); 
+Distrib (u_lnPVE, TruncNormal, 0.0, 0.3, -0.9, 0.9); 
+Distrib (u_lnPAB, TruncNormal, 0.0, 0.3, -0.9, 0.9); 
+Distrib (u_lnPAF, TruncNormal, 0.0, 0.3, -0.9, 0.9); 
+Distrib (u_lnPASP, TruncNormal, 0.0, 0.3, -0.9, 0.9); 
+Distrib (u_lnCLLiv, TruncNormal, 0.0, 0.4, -1.2, 1.2); 
+Distrib (u_lnCLGI, TruncNormal, 0.0, 0.4, -1.2, 1.2); 
+Distrib (u_lnKA, TruncNormal, 0.0, 0.4, -1.2, 1.2); 
+Distrib (u_lnKFec, TruncNormal, 0.0, 0.4, -1.2, 1.2); 
+
+Simulation { 
+  
+  POPer = 1e10;   # Only one dose
+  PTLEN = 0.001;
+
+  PrintStep (CPLS_3, CPLS_4, CBRN_3, CBRN_4, 0, 24, 0.05); 
+
+}

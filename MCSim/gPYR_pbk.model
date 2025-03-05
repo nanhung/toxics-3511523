@@ -1,0 +1,992 @@
+################################################################################
+#
+# gPYR_PBPK.model
+# Global pyrethroid PBPK model (Human) 
+# for forward dosimetry simulation in model verification and application
+#
+# Model structure and parameter values are sourced from 
+# Quindroit et al. (2019) & Mallick et al. (2020)
+# Default value is based on adult male (25 yrs)
+#
+# Notes:
+# Assumed gut metabolize of TPM can ignore
+# 0: Deltamethrin
+# 1: cis-cyfluthrin
+# 2: trans-cyfluthrin
+# 3: cis-cypermethrin
+# 4: trans-cypermethrin
+# 5: cis-permethrin
+# 6: trans-permethrin
+#
+################################################################################
+
+
+States = {
+  ALU[0-6],        # amount in lumen (mg)
+  AABS[0-6],       # amount of absorption (mg)
+  AFEC[0-6],       # amount of fecal excretion (mg)
+  AEXH[0-6],       # amount of exhalation (mg)
+  AMET[0-6],       # amount of total metabolism (mg)
+  APLS[0-6],       # amount in plasma (mg)
+  ASC[0-6],        # amount in stratum corneum (mg)
+  AVE[0-6],        # amount in viable epidermis (mg)
+  AB[0-6],         # amount in brain tissue (mg)
+  AVB[0-6],        # amount in brain plasma (mg)
+  AF[0-6],         # amount in fat tissue (mg)
+  AVF[0-6],        # amount in fat plasma (mg)
+  ASP[0-6],        # amount in slowly perfused tissues (mg)
+  AVSP[0-6],       # amount in slowly perfused tissues plasma (mg) 
+  ARP[0-6],        # amount in rapidly perfused tissues (mg)
+  AGI[0-6],        # amount in the GI (mg)
+  AL[0-6],         # amount in the liver (mg)
+  A3PBA,      # amount transfer to 3PBA (mg) 
+  AFPBA,      # amount transfer to FPBA (mg) 
+  ADBCA,      # amount transfer to DBCA (mg)
+  ADCCAc,     # amount transfer to cis-DCCA (mg)
+  ADCCAt,     # amount transfer to trans-DCCA (mg)
+  AUri3PBA,   # amount of 3PBA in urine (mg)
+  AUriFPBA,   # amount of FPBA in urine (mg)
+  AUriDBCA,   # amount of DBCA in urine (mg)
+  AUriDCCAc,  # amount of cis-DCCA in urine (mg) 
+  AUriDCCAt   # amount of trans-DCCA in urine (mg)
+};
+
+
+Inputs = {
+  PDOSE_DLM,        # Ingest dose of deltamethrin (mg/kg)
+  PDOSE_CYF,        # Ingest dose of cyfluthrin (mg/kg)
+  PDOSE_CPM,        # Ingest dose of cypermethrin (mg/kg)
+  PDOSE_PRM,        # Ingest dose of permethrin (mg/kg)
+  IVDOSE_DLM,       # IV dose of deltamethrin (mg/kg)
+  IVDOSE_CYF,       # IV dose of cyfluthrin (mg/kg)
+  IVDOSE_CPM,       # IV dose of cypermethrin (mg/kg)
+  IVDOSE_PRM,       # IV dose of permethrin (mg/kg)
+  ConDOSE_DLM,      # Contact dose of deltamethrin (mg/kg)
+  ConDOSE_CYF,      # Contact dose of cyfluthrin (mg/kg)
+  ConDOSE_CPM,      # Contact dose of cypermethrin (mg/kg)
+  ConDOSE_PRM,      # Contact dose of permethrin (mg/kg)
+  CINH_DLM,         # Inhaled concentration of deltamethrin (mg/L)
+  CINH_CYF,         # Inhaled concentration of cyfluthrin (mg/L)
+  CINH_CPM,         # Inhaled concentration of cypermethrin (mg/L)
+  CINH_PRM          # Inhaled concentration of permethrin (mg/L)
+};
+
+
+Outputs = {
+  ATOT[0-6],     # total amount (mg)
+  VOLTOTALC,     # total fraction of tissue volume
+  FRTOTALC,      # total fraction of plasma flow (should be 1)
+  RAMet3PBA,     # Rate of metabolism of 3PBA (ug/hr)
+  RAMetFPBA,     # Rate of metabolism of FPBA (ug/hr)
+  RAMetDCCAc,    # Rate of metabolism of cis-DCCA (ug/hr)
+  RAMetDCCAt,    # Rate of metabolism of trans-DCCA (ug/hr)
+  CUri3PBA,
+  CUriDBCA,
+  CUriDCCAc,
+  CUriDCCAt,
+  CUriFPBA,       # concentration of 4F3PBA in urine (ug/L)
+  CPLS[0-6],
+  CBRN[0-6]
+};
+
+
+# Physiological parameter w/o default value
+# -----------------------------------------
+
+QC75;   # Cardiac output or total plasma flow (L/hr)
+QALV; # Alveolar ventilation rate (L/hr)
+
+# Tissue volumes (L)
+VOLBLD; # Blood
+VOLPLS; # Plasma
+VOLRBC; # Red blood cell
+VOLVE;  # 
+VOLBRN; # Brain
+VOLFAT; # Fat
+VOLGI;  # GI
+VOLLIV; # Liver
+VOLRP;  # Rapidly perfused tissue
+VOLSP;  # Slowly perfused tissue
+
+# Slow perfused tissue (be calculated)
+VOLSPC;
+
+# Plasma flows (L/hr; based on cardio output)
+QFAT;   # Fat
+QSK;
+QBRN;   # Brain
+QLIV;   # Liver
+QLIVH;  # Liver artrial blood
+QLIVGI; # LIVER GI 
+QRP;    # Rapidly perfused tissue
+QSP;    # slowly perfused tissue
+
+# Fraction of total plasma flow to rapidly-perfused tissue (be calculated)
+FRRPC;
+
+# Protein binding 
+FuPLS;
+
+# Partition coefficient
+PBRN[0-6];
+PFAT[0-6];
+PLIV[0-6];
+PGI[0-6];
+PVE[0-6];
+PRP[0-6]; # (Mallick et al. 2020)
+PSP[0-6]; # (Mallick et al. 2020)
+
+# Permeability constants (based on tissue vol)
+PAB[0-6];   # Brain
+PAF[0-6];   # Fat
+PASP[0-6];  # Slowly perfused tissues
+
+# IVIVE of pyrethroid metabolism Parameters (based on BW)
+CLLiv[0-6];    # liver clearance (l/hr) 
+CLGI[0-6];     # GI clearance (l/hr)
+
+# Absorption and excretion
+KA[0-6];
+KFec[0-6];
+
+# Urinary volume (based on BW)
+VOLURI;
+
+# Physiological parameter w/ default value
+#-----------------------------------------
+
+BW    = 70;   # Body weight   (kg)
+QC    = 14.1; # Cardic output (L/hr/kg BW^0.75)
+HCT   = 0.4;  # Hematocrit    (-)
+
+# Respiratory parameters
+TV    = 1.16;   # Tidal volume (L)
+DS    = 0.14;   # Dead space (L)
+BF    = 900;    # Breathing frequency (/hr)
+
+# Tissue volume (as fraction of body weight)
+# Tornero-Velez et al. (2012)
+VOLBLDC = 0.079;   # blood 
+VOLBRNC = 0.020;   # brain
+VOLFATC = 0.214;   # fat 
+VOLGIC  = 0.017;   # GI
+VOLLIVC = 0.026;   # liver
+VOLVEC  = 0.037;   # viable epidermis
+VOLRPC  = 0.017;   # rapidly-perfused tissue
+
+# Diffusion-limited
+VTBC = 0.05;      # blood volume in diffusion-limited tissues
+
+# Plasma flow (as fraction of QC)
+# Tornero-Velez et al. (2012)
+FRBRNC   = 0.12;    # brain
+FRFATC   = 0.05;	  # fat
+FRSPC    = 0.325;   # slowly-perfused tissue
+FRLIVC   = 0.227;   # liver (portal + hepatic arterial blood)
+FRSKC    = 0.05;    # skin
+
+# Fraction plasma flow in hepatic arterial (fraction of liver plasma flow)
+FRLIVHC  = 0.05;  	 # hepatic arterial
+
+# Chemical-specific parameter
+# ----------------------------
+
+# Molecular weight (g/mole)  
+MWDLM = 505.2;
+MWPRM = 391.3;
+MWCPM = 416.3;
+MWCYF = 434.3;
+
+MW3PBA = 214.22;
+MWFPBA = 232.21;
+MWDBCA = 297.97;
+MWDCCA = 209.07;
+
+# Protein binding (Mallick et al. 2020)
+FuPLSC = 0.1; 
+
+# Partition coefficients (Quindroit et al. 2019)
+PBRNC[0]  = 0.14; 
+PBRNC[1]  = 8.94;
+PBRNC[2]  = 8.94;
+PBRNC[3]  = 7.94; 
+PBRNC[4]  = 7.94; 
+PBRNC[5]  = 1.60;
+PBRNC[6]  = 1.60;
+PFATC[0]  = 75.0;
+PFATC[1]  = 31.31;
+PFATC[2]  = 31.31;
+PFATC[3]  = 31.31;
+PFATC[4]  = 31.31;
+PFATC[5]  = 225.0;
+PFATC[6]  = 76.0;
+PLIVC[0]  = 19.0;
+PLIVC[1]  = 5.57;
+PLIVC[2]  = 5.57;
+PLIVC[3]  = 4.95;
+PLIVC[4]  = 4.95;
+PLIVC[5]  = 0.89;
+PLIVC[6]  = 0.89;
+PGIC[0]   = 8.10;
+PGIC[1]   = 2.17;
+PGIC[2]   = 2.17;
+PGIC[3]   = 6.26;
+PGIC[4]   = 6.26;
+PGIC[5]   = 1.10;
+PGIC[6]   = 0.21;
+PVEC[0]   = 8.10;
+PVEC[1]   = 4.18;
+PVEC[2]   = 4.18;
+PVEC[3]   = 3.71;
+PVEC[4]   = 3.71;
+PVEC[5]   = 19.0;
+PVEC[6]   = 8.10;
+PRPC[0-6] = 1.71; # (Mallick et al. 2020)
+PSPC[0-6] = 3.94; # (Mallick et al. 2020)
+PPA = 1000; # (Mallick et al. 2020)
+
+# Tissue permeability (L/h/tissue weight^0.75; Quindroit et al. 2019)
+PABC[0]  = 0.095;
+PABC[1]  = 0.0480;
+PABC[2]  = 0.0576;
+PABC[3]  = 0.0480;
+PABC[4]  = 0.0476;
+PABC[5]  = 0.0480;
+PABC[6]  = 0.0576;
+PAFC[0]  = 1.2;
+PAFC[1]  = 2.304;
+PAFC[2]  = 0.528;
+PAFC[3]  = 2.304;
+PAFC[4]  = 0.528;
+PAFC[5]  = 2.034;
+PAFC[6]  = 0.528;
+PASPC[0] = 2.064;
+PASPC[1] = 1.536;
+PASPC[2] = 2.304;
+PASPC[3] = 1.536;
+PASPC[4] = 2.304;
+PASPC[5] = 1.536;
+PASPC[6] = 2.304;
+
+# Absorption rates (/h; Quindroit et al. 2019)
+Kds = 0.0025; # Surface-SC transfer
+Kdv = 0.25;   # SC-venous blood transfer
+KAC[0] = 1.51; # Absorption from gut
+KAC[1] = 0.52;
+KAC[3] = 0.52;
+KAC[5] = 0.52;
+KAC[2] = 1.3;
+KAC[4] = 1.3;
+KAC[6] = 1.3;
+
+# Fecal excretion rate (/h; Quindroit et al. 2019)
+KFecC[0] = 0.59;
+KFecC[1] = 0.39;
+KFecC[2] = 0.85;
+KFecC[3] = 0.39;
+KFecC[4] = 0.85;
+KFecC[5] = 0.39;
+KFecC[6] = 0.85;
+
+# Switch for lymphatic absorption (Mallick et al. 2020)
+LYMPHSWTCH = 0.086;
+
+# IVIVE of Pyrethroid Metabolism Parameters (l/hr/kg BW; Quindroit et al. 2019)
+CLLivC[0]  = 9.72; 
+CLLivC[1]  = 5.34; 
+CLLivC[2]  = 5.34; 
+CLLivC[3]  = 6.24; 
+CLLivC[4]  = 6.24; 
+CLLivC[5]  = 1.56; 
+CLLivC[6]  = 3.97; 
+CLGIC[0]   = 0.0;
+CLGIC[1]   = 0.0;
+CLGIC[2]   = 0.0;
+CLGIC[3]   = 0.0;
+CLGIC[4]   = 0.0;
+CLGIC[5]   = 0.0;
+CLGIC[6]   = 0.78;
+
+# Urinary excertion rate (Quindroit et al. 2019)
+# half-life = 5 hrs; ln(2) / 5 hrs = 0.137 hr-1
+KUri3PBA = 0.094;  # 3PBA
+KUriFPBA = 0.167;  # FPBA
+KUriDBCA = 0.193;  # DBCA
+KUriDCCAc = 0.108; # cis-DCCA
+KUriDCCAt = 0.107; # trans-DCCA
+
+# Metabolite fractions
+DLM_DBCA = 0.73;
+cCF_FPBA = 0.10;
+tCF_FPBA = 0.23;
+DLM_3PBA = 0.15;
+cCM_3PBA = 0.16;
+tCM_3PBA = 0.39;
+cPM_3PBA = 0.37;
+tPM_3PBA = 0.85;
+cCF_DCCA = 0.27;
+cCM_DCCA = 0.32;
+cPM_DCCA = 0.37;
+tCF_DCCA = 0.35;
+tCM_DCCA = 0.57;
+tPM_DCCA = 0.61;
+
+#
+ratio_cisPRM = 0.40;
+ratio_cisCPM = 0.42;
+ratio_cisCYF = 0.40;
+
+# Daily urine volume (based on the BW)
+VOLURIC = 0.0006; # L/h/kg bdw
+
+# Exposure parameters -----------------------------------------------------
+
+# PO
+POPer   = 24.0;  # period of the exposure/no exposure cycle
+PTLEN   = 0.001; # exposure dutation within a period (hr); default: 3.6s
+IngDose_DLM = 0.0; 
+IngDose_CYF = 0.0;  
+IngDose_CPM = 0.0;  
+IngDose_PRM = 0.0;  
+PDOSE_DLM = PerDose(IngDose_DLM, POPer, 0.0, PTLEN);
+PDOSE_CYF = PerDose(IngDose_CYF, POPer, 0.0, PTLEN);
+PDOSE_CPM = PerDose(IngDose_CPM, POPer, 0.0, PTLEN);
+PDOSE_PRM = PerDose(IngDose_PRM, POPer, 0.0, PTLEN);
+
+# Inhalation
+InhPer   = 24.0;   # period of the exposure/no exposure cycle
+Exposure = 1.0;    # exposure dutation within a period (hr); default: 1 hr
+InhMag_DLM   = 0.0;
+InhMag_CYF   = 0.0;
+InhMag_CPM   = 0.0;
+InhMag_PRM   = 0.0;
+CINH_DLM = PerDose (InhMag_DLM, InhPer, 0.0, Exposure);
+CINH_CYF = PerDose (InhMag_CYF, InhPer, 0.0, Exposure);
+CINH_CPM = PerDose (InhMag_CPM, InhPer, 0.0, Exposure);
+CINH_PRM = PerDose (InhMag_PRM, InhPer, 0.0, Exposure);
+
+# IV
+IVPer    = 24.0;     # period of the exposure/no exposure cycle
+IVTLEN   = 0.001;    # IV duration (hr); default: 3.6s
+IVDose_DLM = 0.0;
+IVDose_CYF = 0.0;
+IVDose_CPM = 0.0;
+IVDose_PRM = 0.0;
+IVDOSE_DLM  = PerDose (IVDose_DLM, IVPer, 0.0, IVTLEN);
+IVDOSE_CYF  = PerDose (IVDose_CYF, IVPer, 0.0, IVTLEN);
+IVDOSE_CPM  = PerDose (IVDose_CPM, IVPer, 0.0, IVTLEN);
+IVDOSE_PRM  = PerDose (IVDose_PRM, IVPer, 0.0, IVTLEN);
+
+# Dermal
+ConDose     = 0.0;    # contact dose (mg)
+ConPer      = 0.0;    # contact period (h)
+ConDose_DLM = 0.0;
+ConDose_CYF = 0.0;
+ConDose_CPM = 0.0;
+ConDose_PRM = 0.0;
+ConDOSE_DLM = PerExp (ConDose_DLM, ConPer, 0.0, Kds);
+ConDOSE_CYF = PerExp (ConDose_CYF, ConPer, 0.0, Kds);
+ConDOSE_CPM = PerExp (ConDose_CPM, ConPer, 0.0, Kds);
+ConDOSE_PRM = PerExp (ConDose_PRM, ConPer, 0.0, Kds);
+
+
+# Uncertainty (u_) -----------------------------------------------------
+# These parameters are used for MC simulation.
+# The default values here are used if no sampled value is given.
+
+u_lnKA     = 0.0;
+u_lnKFec   = 0.0;
+u_lnPVE    = 0.0;
+u_lnPBRN   = 0.0;
+u_lnPFAT   = 0.0;
+u_lnPGI    = 0.0;
+u_lnPLIV   = 0.0;
+u_lnPRP    = 0.0;
+u_lnPSP    = 0.0;
+u_lnFuPLS  = 0.0;
+u_lnPAB    = 0.0;
+u_lnPAF    = 0.0;
+u_lnPASP   = 0.0;
+u_lnCLLiv  = 0.0;
+u_lnCLGI   = 0.0;
+
+# Model initialization
+ 
+Initialize {
+
+  QC75 = QC * pow(BW, 0.75); # L/h
+  
+  # Calculate Alveolar ventilation rate (L/hr)
+  QALV = (TV - DS) * BF;
+  
+  # Slowly-perfused tissue volume / 15% non-perfused (bone, hair, etc.)
+  VOLSPC = 0.85 - (VOLBLDC + VOLVEC + VOLBRNC + VOLFATC + VOLRPC+ VOLLIVC + VOLGIC);
+  VOLSP = VOLSPC * BW;
+  
+  # Total plasma flow to rapidly-perfused tissue
+  FRRPC = 1 - (FRFATC + FRSKC + FRBRNC + FRLIVC + FRSPC);
+  QRP = FRRPC * QC75;
+  
+  # Tissue volumes (L)
+  
+  VOLBLD = VOLBLDC * BW;    
+  VOLPLS = VOLBLD * (1-HCT);                 
+  VOLRBC = VOLBLD * HCT;
+  VOLVE = VOLVEC * BW;
+  VOLBRN = VOLBRNC * BW;    
+  VOLFAT = VOLFATC * BW;    
+  VOLGI = VOLGIC * BW;       
+  VOLLIV = VOLLIVC * BW;    
+  VOLRP = VOLRPC * BW;
+   
+  # Plasma flows (L/hr)
+  
+  QSK = FRSKC * QC75;  
+  QBRN = FRBRNC * QC75;  
+  QFAT = FRFATC * QC75;  
+  QLIV = FRLIVC * QC75;  
+  QLIVH = QLIV * FRLIVHC;               
+  QLIVGI = QLIV * (1 - FRLIVHC);          
+  QSP = FRSPC * QC75; 
+  
+  #  Chemical-specific parameters
+  FuPLS = FuPLSC * exp(u_lnFuPLS);
+  PVE[0] = PVEC[0] * exp(u_lnPVE);
+  PVE[1] = PVEC[1] * exp(u_lnPVE);
+  PVE[2] = PVEC[2] * exp(u_lnPVE);
+  PVE[3] = PVEC[3] * exp(u_lnPVE);
+  PVE[4] = PVEC[4] * exp(u_lnPVE);
+  PVE[5] = PVEC[5] * exp(u_lnPVE);
+  PVE[6] = PVEC[6] * exp(u_lnPVE);
+  PBRN[0] = PBRNC[0] * exp(u_lnPBRN);
+  PBRN[1] = PBRNC[1] * exp(u_lnPBRN);
+  PBRN[2] = PBRNC[2] * exp(u_lnPBRN);
+  PBRN[3] = PBRNC[3] * exp(u_lnPBRN);
+  PBRN[4] = PBRNC[4] * exp(u_lnPBRN);
+  PBRN[5] = PBRNC[5] * exp(u_lnPBRN);
+  PBRN[6] = PBRNC[6] * exp(u_lnPBRN);
+  PFAT[0] = PFATC[0] * exp(u_lnPFAT);
+  PFAT[1] = PFATC[1] * exp(u_lnPFAT);
+  PFAT[2] = PFATC[2] * exp(u_lnPFAT);
+  PFAT[3] = PFATC[3] * exp(u_lnPFAT);
+  PFAT[4] = PFATC[4] * exp(u_lnPFAT);
+  PFAT[5] = PFATC[5] * exp(u_lnPFAT);
+  PFAT[6] = PFATC[6] * exp(u_lnPFAT);
+  PGI[0]  = PGIC[0] * exp(u_lnPGI);
+  PGI[1]  = PGIC[1] * exp(u_lnPGI);
+  PGI[2]  = PGIC[2] * exp(u_lnPGI);
+  PGI[3]  = PGIC[3] * exp(u_lnPGI);
+  PGI[4]  = PGIC[4] * exp(u_lnPGI);
+  PGI[5]  = PGIC[5] * exp(u_lnPGI);
+  PGI[6]  = PGIC[6] * exp(u_lnPGI);
+  PLIV[0] = PLIVC[0] * exp(u_lnPLIV);
+  PLIV[1] = PLIVC[1] * exp(u_lnPLIV);
+  PLIV[2] = PLIVC[2] * exp(u_lnPLIV);
+  PLIV[3] = PLIVC[3] * exp(u_lnPLIV);
+  PLIV[4] = PLIVC[4] * exp(u_lnPLIV);
+  PLIV[5] = PLIVC[5] * exp(u_lnPLIV);
+  PLIV[6] = PLIVC[6] * exp(u_lnPLIV);
+  PRP[0]  = PRPC[0] * exp(u_lnPRP);
+  PRP[1]  = PRPC[1] * exp(u_lnPRP);
+  PRP[2]  = PRPC[2] * exp(u_lnPRP);
+  PRP[3]  = PRPC[3] * exp(u_lnPRP);
+  PRP[4]  = PRPC[4] * exp(u_lnPRP);
+  PRP[5]  = PRPC[5] * exp(u_lnPRP);
+  PRP[6]  = PRPC[6] * exp(u_lnPRP);
+  PSP[0]  = PSPC[0] * exp(u_lnPSP);
+  PSP[1]  = PSPC[1] * exp(u_lnPSP);
+  PSP[2]  = PSPC[2] * exp(u_lnPSP);
+  PSP[3]  = PSPC[3] * exp(u_lnPSP);
+  PSP[4]  = PSPC[4] * exp(u_lnPSP);
+  PSP[5]  = PSPC[5] * exp(u_lnPSP);
+  PSP[6]  = PSPC[6] * exp(u_lnPSP);
+  KA[0]   = KAC[0] * exp(u_lnKA);
+  KA[1]   = KAC[1] * exp(u_lnKA);
+  KA[2]   = KAC[2] * exp(u_lnKA);
+  KA[3]   = KAC[3] * exp(u_lnKA);
+  KA[4]   = KAC[4] * exp(u_lnKA);
+  KA[5]   = KAC[5] * exp(u_lnKA);
+  KA[6]   = KAC[6] * exp(u_lnKA);
+  KFec[0] = KFecC[0] * exp(u_lnKFec);
+  KFec[1] = KFecC[1] * exp(u_lnKFec);
+  KFec[2] = KFecC[2] * exp(u_lnKFec);
+  KFec[3] = KFecC[3] * exp(u_lnKFec);
+  KFec[4] = KFecC[4] * exp(u_lnKFec);
+  KFec[5] = KFecC[5] * exp(u_lnKFec);
+  KFec[6] = KFecC[6] * exp(u_lnKFec);
+  PAB[0]  = PABC[0] * pow(VOLBRN, 0.75) * exp(u_lnPAB);   
+  PAB[1]  = PABC[1] * pow(VOLBRN, 0.75) * exp(u_lnPAB);   
+  PAB[2]  = PABC[2] * pow(VOLBRN, 0.75) * exp(u_lnPAB);   
+  PAB[3]  = PABC[3] * pow(VOLBRN, 0.75) * exp(u_lnPAB);   
+  PAB[4]  = PABC[4] * pow(VOLBRN, 0.75) * exp(u_lnPAB);   
+  PAB[5]  = PABC[5] * pow(VOLBRN, 0.75) * exp(u_lnPAB);   
+  PAB[6]  = PABC[6] * pow(VOLBRN, 0.75) * exp(u_lnPAB);   
+  PAF[0]  = PAFC[0] * pow(VOLFAT, 0.75) * exp(u_lnPAF);	 
+  PAF[1]  = PAFC[1] * pow(VOLFAT, 0.75) * exp(u_lnPAF);	 
+  PAF[2]  = PAFC[2] * pow(VOLFAT, 0.75) * exp(u_lnPAF);	 
+  PAF[3]  = PAFC[3] * pow(VOLFAT, 0.75) * exp(u_lnPAF);	 
+  PAF[4]  = PAFC[4] * pow(VOLFAT, 0.75) * exp(u_lnPAF);	 
+  PAF[5]  = PAFC[5] * pow(VOLFAT, 0.75) * exp(u_lnPAF);	 
+  PAF[6]  = PAFC[6] * pow(VOLFAT, 0.75) * exp(u_lnPAF);	 
+  PASP[0] = PASPC[0] * pow(VOLSP, 0.75) * exp(u_lnPASP);	 
+  PASP[1] = PASPC[1] * pow(VOLSP, 0.75) * exp(u_lnPASP);	 
+  PASP[2] = PASPC[2] * pow(VOLSP, 0.75) * exp(u_lnPASP);	 
+  PASP[3] = PASPC[3] * pow(VOLSP, 0.75) * exp(u_lnPASP);	 
+  PASP[4] = PASPC[4] * pow(VOLSP, 0.75) * exp(u_lnPASP);	 
+  PASP[5] = PASPC[5] * pow(VOLSP, 0.75) * exp(u_lnPASP);	 
+  PASP[6] = PASPC[6] * pow(VOLSP, 0.75) * exp(u_lnPASP);	 
+  CLLiv[0] = CLLivC[0] * BW * exp(u_lnCLLiv);
+  CLLiv[1] = CLLivC[1] * BW * exp(u_lnCLLiv);
+  CLLiv[2] = CLLivC[2] * BW * exp(u_lnCLLiv);
+  CLLiv[3] = CLLivC[3] * BW * exp(u_lnCLLiv);
+  CLLiv[4] = CLLivC[4] * BW * exp(u_lnCLLiv);
+  CLLiv[5] = CLLivC[5] * BW * exp(u_lnCLLiv);
+  CLLiv[6] = CLLivC[6] * BW * exp(u_lnCLLiv);
+  CLGI[0] = CLGIC[0] * BW * exp(u_lnCLGI);  
+  CLGI[1] = CLGIC[1] * BW * exp(u_lnCLGI);  
+  CLGI[2] = CLGIC[2] * BW * exp(u_lnCLGI);  
+  CLGI[3] = CLGIC[3] * BW * exp(u_lnCLGI);  
+  CLGI[4] = CLGIC[4] * BW * exp(u_lnCLGI);  
+  CLGI[5] = CLGIC[5] * BW * exp(u_lnCLGI);  
+  CLGI[6] = CLGIC[6] * BW * exp(u_lnCLGI);   
+  VOLURI =  VOLURIC * BW;
+  
+} # End of model initialization
+
+
+Dynamics {
+  
+  # Plasma arterial
+  CPLS[0] = APLS[0]/VOLPLS;          
+  CPLS[1] = APLS[1]/VOLPLS;          
+  CPLS[2] = APLS[2]/VOLPLS;          
+  CPLS[3] = APLS[3]/VOLPLS;          
+  CPLS[4] = APLS[4]/VOLPLS;          
+  CPLS[5] = APLS[5]/VOLPLS;          
+  CPLS[6] = APLS[6]/VOLPLS;          
+  CPLSf[0] = CPLS[0]*FuPLS; 		   
+  CPLSf[1] = CPLS[1]*FuPLS; 		   
+  CPLSf[2] = CPLS[2]*FuPLS; 		   
+  CPLSf[3] = CPLS[3]*FuPLS; 		   
+  CPLSf[4] = CPLS[4]*FuPLS; 		   
+  CPLSf[5] = CPLS[5]*FuPLS; 		   
+  CPLSf[6] = CPLS[6]*FuPLS; 		   
+  CPLSb[0] = CPLS[0]*(1-FuPLS);	   
+  CPLSb[1] = CPLS[1]*(1-FuPLS);	   
+  CPLSb[2] = CPLS[2]*(1-FuPLS);	   
+  CPLSb[3] = CPLS[3]*(1-FuPLS);	   
+  CPLSb[4] = CPLS[4]*(1-FuPLS);	   
+  CPLSb[5] = CPLS[5]*(1-FuPLS);	   
+  CPLSb[6] = CPLS[6]*(1-FuPLS);	   
+  
+  # GI
+  CGIf[0] = AGI[0]/VOLGI*FuPLS/PGI[0];
+  CGIf[1] = AGI[1]/VOLGI*FuPLS/PGI[1];
+  CGIf[2] = AGI[2]/VOLGI*FuPLS/PGI[2];
+  CGIf[3] = AGI[3]/VOLGI*FuPLS/PGI[3];
+  CGIf[4] = AGI[4]/VOLGI*FuPLS/PGI[4];
+  CGIf[5] = AGI[5]/VOLGI*FuPLS/PGI[5];
+  CGIf[6] = AGI[6]/VOLGI*FuPLS/PGI[6];
+
+  # Liver
+  CLf[0] = AL[0]/VOLLIV*FuPLS/PLIV[0];		  
+  CLf[1] = AL[1]/VOLLIV*FuPLS/PLIV[1];		  
+  CLf[2] = AL[2]/VOLLIV*FuPLS/PLIV[2];		  
+  CLf[3] = AL[3]/VOLLIV*FuPLS/PLIV[3];		  
+  CLf[4] = AL[4]/VOLLIV*FuPLS/PLIV[4];		  
+  CLf[5] = AL[5]/VOLLIV*FuPLS/PLIV[5];		  
+  CLf[6] = AL[6]/VOLLIV*FuPLS/PLIV[6];		  
+  CVL[0] = CLf[0] + CPLSb[0];
+  CVL[1] = CLf[1] + CPLSb[1];			
+  CVL[2] = CLf[2] + CPLSb[2];			
+  CVL[3] = CLf[3] + CPLSb[3];			
+  CVL[4] = CLf[4] + CPLSb[4];			
+  CVL[5] = CLf[5] + CPLSb[5];			
+  CVL[6] = CLf[6] + CPLSb[6];			
+  
+  # Rapidly perfused
+  CRPf[0] = ARP[0]/VOLRP*FuPLS/PRP[0];	   
+  CRPf[1] = ARP[1]/VOLRP*FuPLS/PRP[1];	   
+  CRPf[2] = ARP[2]/VOLRP*FuPLS/PRP[2];	   
+  CRPf[3] = ARP[3]/VOLRP*FuPLS/PRP[3];	   
+  CRPf[4] = ARP[4]/VOLRP*FuPLS/PRP[4];	   
+  CRPf[5] = ARP[5]/VOLRP*FuPLS/PRP[5];	   
+  CRPf[6] = ARP[6]/VOLRP*FuPLS/PRP[6];	   
+  CVRP[0] = CRPf[0] + CPLSb[0];			   
+  CVRP[1] = CRPf[1] + CPLSb[1];			   
+  CVRP[2] = CRPf[2] + CPLSb[2];			   
+  CVRP[3] = CRPf[3] + CPLSb[3];			   
+  CVRP[4] = CRPf[4] + CPLSb[4];			   
+  CVRP[5] = CRPf[5] + CPLSb[5];			   
+  CVRP[6] = CRPf[6] + CPLSb[6];			   
+  
+  # Slowly-perfused
+  CVSPf[0] = AVSP[0]/(VTBC*VOLSP);
+  CVSPf[1] = AVSP[1]/(VTBC*VOLSP);
+  CVSPf[2] = AVSP[2]/(VTBC*VOLSP);
+  CVSPf[3] = AVSP[3]/(VTBC*VOLSP);
+  CVSPf[4] = AVSP[4]/(VTBC*VOLSP);
+  CVSPf[5] = AVSP[5]/(VTBC*VOLSP);
+  CVSPf[6] = AVSP[6]/(VTBC*VOLSP);
+  CSPf[0] = (ASP[0]/((1-VTBC)*VOLSP))*FuPLS/PSP[0];
+  CSPf[1] = (ASP[1]/((1-VTBC)*VOLSP))*FuPLS/PSP[1];
+  CSPf[2] = (ASP[2]/((1-VTBC)*VOLSP))*FuPLS/PSP[2];
+  CSPf[3] = (ASP[3]/((1-VTBC)*VOLSP))*FuPLS/PSP[3];
+  CSPf[4] = (ASP[4]/((1-VTBC)*VOLSP))*FuPLS/PSP[4];
+  CSPf[5] = (ASP[5]/((1-VTBC)*VOLSP))*FuPLS/PSP[5];
+  CSPf[6] = (ASP[6]/((1-VTBC)*VOLSP))*FuPLS/PSP[6];
+  CVSP[0] = CVSPf[0] + CPLSb[0]; 
+  CVSP[1] = CVSPf[1] + CPLSb[1]; 
+  CVSP[2] = CVSPf[2] + CPLSb[2]; 
+  CVSP[3] = CVSPf[3] + CPLSb[3]; 
+  CVSP[4] = CVSPf[4] + CPLSb[4]; 
+  CVSP[5] = CVSPf[5] + CPLSb[5]; 
+  CVSP[6] = CVSPf[6] + CPLSb[6]; 
+  
+  # Viable epidermis
+  CVEf[0] = AVE[0]/VOLVE*FuPLS/PVE[0];  
+  CVEf[1] = AVE[1]/VOLVE*FuPLS/PVE[1];  
+  CVEf[2] = AVE[2]/VOLVE*FuPLS/PVE[2];  
+  CVEf[3] = AVE[3]/VOLVE*FuPLS/PVE[3];  
+  CVEf[4] = AVE[4]/VOLVE*FuPLS/PVE[4];  
+  CVEf[5] = AVE[5]/VOLVE*FuPLS/PVE[5];  
+  CVEf[6] = AVE[6]/VOLVE*FuPLS/PVE[6];  
+  CVVE[0] = CVEf[0] + CPLSb[0];         
+  CVVE[1] = CVEf[1] + CPLSb[1];         
+  CVVE[2] = CVEf[2] + CPLSb[2];         
+  CVVE[3] = CVEf[3] + CPLSb[3];         
+  CVVE[4] = CVEf[4] + CPLSb[4];         
+  CVVE[5] = CVEf[5] + CPLSb[5];         
+  CVVE[6] = CVEf[6] + CPLSb[6];         
+  
+  # Brain
+  CBRN[0] = (AVB[0]+AB[0])/VOLBRN;
+  CBRN[1] = (AVB[1]+AB[1])/VOLBRN;
+  CBRN[2] = (AVB[2]+AB[2])/VOLBRN;
+  CBRN[3] = (AVB[3]+AB[3])/VOLBRN;
+  CBRN[4] = (AVB[4]+AB[4])/VOLBRN;
+  CBRN[5] = (AVB[5]+AB[5])/VOLBRN;
+  CBRN[6] = (AVB[6]+AB[6])/VOLBRN;
+  CVBf[0] = AVB[0]/(VTBC*VOLBRN);
+  CVBf[1] = AVB[1]/(VTBC*VOLBRN);
+  CVBf[2] = AVB[2]/(VTBC*VOLBRN);
+  CVBf[3] = AVB[3]/(VTBC*VOLBRN);
+  CVBf[4] = AVB[4]/(VTBC*VOLBRN);
+  CVBf[5] = AVB[5]/(VTBC*VOLBRN);
+  CVBf[6] = AVB[6]/(VTBC*VOLBRN);
+  CBf[0] = (AB[0]/((1-VTBC)*VOLBRN))*FuPLS/PBRN[0];
+  CBf[1] = (AB[1]/((1-VTBC)*VOLBRN))*FuPLS/PBRN[1];
+  CBf[2] = (AB[2]/((1-VTBC)*VOLBRN))*FuPLS/PBRN[2];
+  CBf[3] = (AB[3]/((1-VTBC)*VOLBRN))*FuPLS/PBRN[3];
+  CBf[4] = (AB[4]/((1-VTBC)*VOLBRN))*FuPLS/PBRN[4];
+  CBf[5] = (AB[5]/((1-VTBC)*VOLBRN))*FuPLS/PBRN[5];
+  CBf[6] = (AB[6]/((1-VTBC)*VOLBRN))*FuPLS/PBRN[6];
+  CVB[0] = CVBf[0] + CPLSb[0];
+  CVB[1] = CVBf[1] + CPLSb[1];
+  CVB[2] = CVBf[2] + CPLSb[2];
+  CVB[3] = CVBf[3] + CPLSb[3];
+  CVB[4] = CVBf[4] + CPLSb[4];
+  CVB[5] = CVBf[5] + CPLSb[5];
+  CVB[6] = CVBf[6] + CPLSb[6];
+  
+  # Fat
+  CVFf[0] = AVF[0]/(VTBC*VOLFAT);			        
+  CVFf[1] = AVF[1]/(VTBC*VOLFAT);			        
+  CVFf[2] = AVF[2]/(VTBC*VOLFAT);			        
+  CVFf[3] = AVF[3]/(VTBC*VOLFAT);			        
+  CVFf[4] = AVF[4]/(VTBC*VOLFAT);			        
+  CVFf[5] = AVF[5]/(VTBC*VOLFAT);			        
+  CVFf[6] = AVF[6]/(VTBC*VOLFAT);			        
+  CFf[0] = (AF[0]/((1-VTBC)*VOLFAT))*FuPLS/PFAT[0];  
+  CFf[1] = (AF[1]/((1-VTBC)*VOLFAT))*FuPLS/PFAT[1];  
+  CFf[2] = (AF[2]/((1-VTBC)*VOLFAT))*FuPLS/PFAT[2];  
+  CFf[3] = (AF[3]/((1-VTBC)*VOLFAT))*FuPLS/PFAT[3];  
+  CFf[4] = (AF[4]/((1-VTBC)*VOLFAT))*FuPLS/PFAT[4];  
+  CFf[5] = (AF[5]/((1-VTBC)*VOLFAT))*FuPLS/PFAT[5];  
+  CFf[6] = (AF[6]/((1-VTBC)*VOLFAT))*FuPLS/PFAT[6];  
+  CVF[0] = CVFf[0] + CPLSb[0];
+  CVF[1] = CVFf[1] + CPLSb[1];			            
+  CVF[2] = CVFf[2] + CPLSb[2];			            
+  CVF[3] = CVFf[3] + CPLSb[3];			            
+  CVF[4] = CVFf[4] + CPLSb[4];			            
+  CVF[5] = CVFf[5] + CPLSb[5];			            
+  CVF[6] = CVFf[6] + CPLSb[6];			            
+  
+  # Plasma venous (mg/L)
+  CV[0] = (QSK*CVVE[0] + QBRN*CVB[0] + QFAT*CVF[0] + QSP*CVSP[0]  + QRP*CVRP[0] + QLIV*CVL[0])/QC75;
+  CV[1] = (QSK*CVVE[1] + QBRN*CVB[1] + QFAT*CVF[1] + QSP*CVSP[1]  + QRP*CVRP[1] + QLIV*CVL[1])/QC75;
+  CV[2] = (QSK*CVVE[2] + QBRN*CVB[2] + QFAT*CVF[2] + QSP*CVSP[2]  + QRP*CVRP[2] + QLIV*CVL[2])/QC75;
+  CV[3] = (QSK*CVVE[3] + QBRN*CVB[3] + QFAT*CVF[3] + QSP*CVSP[3]  + QRP*CVRP[3] + QLIV*CVL[3])/QC75;
+  CV[4] = (QSK*CVVE[4] + QBRN*CVB[4] + QFAT*CVF[4] + QSP*CVSP[4]  + QRP*CVRP[4] + QLIV*CVL[4])/QC75;
+  CV[5] = (QSK*CVVE[5] + QBRN*CVB[5] + QFAT*CVF[5] + QSP*CVSP[5]  + QRP*CVRP[5] + QLIV*CVL[5])/QC75;
+  CV[6] = (QSK*CVVE[6] + QBRN*CVB[6] + QFAT*CVF[6] + QSP*CVSP[6]  + QRP*CVRP[6] + QLIV*CVL[6])/QC75;
+  
+  # Oral dose rate (mg/hour)
+  RPO[0] = PDOSE_DLM * BW / PTLEN; 
+  RPO[1] = PDOSE_CYF * ratio_cisCYF * BW / PTLEN; 
+  RPO[2] = PDOSE_CYF * (1-ratio_cisCYF) * BW / PTLEN; 
+  RPO[3] = PDOSE_CPM * ratio_cisCPM * BW / PTLEN; 
+  RPO[4] = PDOSE_CPM * (1-ratio_cisCPM) * BW / PTLEN; 
+  RPO[5] = PDOSE_PRM * ratio_cisPRM * BW / PTLEN; 
+  RPO[6] = PDOSE_PRM * (1-ratio_cisPRM) * BW / PTLEN; 
+  
+  # Dermal dose rate (mg)
+  DCon[0] = ConDOSE_DLM;
+  DCon[1] = ConDOSE_CYF * ratio_cisCYF;
+  DCon[2] = ConDOSE_CYF * (1-ratio_cisCYF);
+  DCon[3] = ConDOSE_CPM * ratio_cisCPM;
+  DCon[4] = ConDOSE_CPM * (1-ratio_cisCPM);
+  DCon[5] = ConDOSE_PRM * ratio_cisPRM;
+  DCon[6] = ConDOSE_PRM * (1-ratio_cisPRM);
+  
+  # IV dose rate (mg/hour)
+  RIV[0] = IVDOSE_DLM * BW / IVTLEN;
+  RIV[1] = IVDOSE_CYF * ratio_cisPRM * BW / IVTLEN;
+  RIV[2] = IVDOSE_CYF * (1-ratio_cisCYF) * BW / IVTLEN;
+  RIV[3] = IVDOSE_CPM * ratio_cisCPM * BW / IVTLEN;
+  RIV[4] = IVDOSE_CPM * (1-ratio_cisCPM) * BW / IVTLEN;
+  RIV[5] = IVDOSE_PRM * ratio_cisPRM * BW / IVTLEN;
+  RIV[6] = IVDOSE_PRM * (1-ratio_cisPRM) * BW / IVTLEN;
+  
+  #Inhalation Exposure (mg/hour)
+  RINH[0] = QALV * CINH_DLM;
+  RINH[1] = QALV * CINH_CYF * ratio_cisCYF;
+  RINH[2] = QALV * CINH_CYF * (1-ratio_cisCYF);
+  RINH[3] = QALV * CINH_CPM * ratio_cisCPM;
+  RINH[4] = QALV * CINH_CPM * (1-ratio_cisCPM);
+  RINH[5] = QALV * CINH_PRM * ratio_cisPRM;
+  RINH[6] = QALV * CINH_PRM * (1-ratio_cisPRM);
+  
+  REXH[0] = QALV*CPLS[0]/PPA;
+  REXH[1] = QALV*CPLS[1]/PPA;
+  REXH[2] = QALV*CPLS[2]/PPA;
+  REXH[3] = QALV*CPLS[3]/PPA;
+  REXH[4] = QALV*CPLS[4]/PPA;
+  REXH[5] = QALV*CPLS[5]/PPA;
+  REXH[6] = QALV*CPLS[6]/PPA;
+  
+  # Differentials for quantities
+  dt(ALU[0])  = RPO[0] - KA[0]*ALU[0] - KFec[0]*ALU[0];   
+  dt(ALU[1])  = RPO[1] - KA[1]*ALU[1] - KFec[1]*ALU[1];    
+  dt(ALU[2])  = RPO[2] - KA[2]*ALU[2] - KFec[2]*ALU[2];    
+  dt(ALU[3])  = RPO[3] - KA[3]*ALU[3] - KFec[3]*ALU[3];    
+  dt(ALU[4])  = RPO[4] - KA[4]*ALU[4] - KFec[4]*ALU[4];    
+  dt(ALU[5])  = RPO[5] - KA[5]*ALU[5] - KFec[5]*ALU[5];    
+  dt(ALU[6])  = RPO[6] - KA[6]*ALU[6] - KFec[6]*ALU[6];    
+  
+  # Total fecal excretion (can comment out)
+  dt(AFEC[0]) = KFec[0]*ALU[0];                  
+  dt(AFEC[1]) = KFec[1]*ALU[1];                  
+  dt(AFEC[2]) = KFec[2]*ALU[2];                  
+  dt(AFEC[3]) = KFec[3]*ALU[3];                  
+  dt(AFEC[4]) = KFec[4]*ALU[4];                  
+  dt(AFEC[5]) = KFec[5]*ALU[5];                  
+  dt(AFEC[6]) = KFec[6]*ALU[6];                  
+  
+  # Total absorption (can comment out)
+  dt(AABS[0]) = KA[0]*ALU[0];    				        
+  dt(AABS[1]) = KA[1]*ALU[1];    				        
+  dt(AABS[2]) = KA[2]*ALU[2];    				        
+  dt(AABS[3]) = KA[3]*ALU[3];    				        
+  dt(AABS[4]) = KA[4]*ALU[4];    				        
+  dt(AABS[5]) = KA[5]*ALU[5];    				        
+  dt(AABS[6]) = KA[6]*ALU[6];    				        
+  
+  # Dermal
+  dt(ASC[0])  = ( t > ConPer ? - Kdv * ASC[0] : Kds * DCon[0] - Kdv * ASC[0]);
+  dt(ASC[1])  = ( t > ConPer ? - Kdv * ASC[1] : Kds * DCon[1] - Kdv * ASC[1]);
+  dt(ASC[2])  = ( t > ConPer ? - Kdv * ASC[2] : Kds * DCon[2] - Kdv * ASC[2]);
+  dt(ASC[3])  = ( t > ConPer ? - Kdv * ASC[3] : Kds * DCon[3] - Kdv * ASC[3]);
+  dt(ASC[4])  = ( t > ConPer ? - Kdv * ASC[4] : Kds * DCon[4] - Kdv * ASC[4]);
+  dt(ASC[5])  = ( t > ConPer ? - Kdv * ASC[5] : Kds * DCon[5] - Kdv * ASC[5]);
+  dt(ASC[6])  = ( t > ConPer ? - Kdv * ASC[6] : Kds * DCon[6] - Kdv * ASC[6]);
+  dt(AVE[0])  = Kdv * ASC[0] + QSK*(CPLSf[0]-CVEf[0]);
+  dt(AVE[1])  = Kdv * ASC[1] + QSK*(CPLSf[1]-CVEf[1]);
+  dt(AVE[2])  = Kdv * ASC[2] + QSK*(CPLSf[2]-CVEf[2]);
+  dt(AVE[3])  = Kdv * ASC[3] + QSK*(CPLSf[3]-CVEf[3]);
+  dt(AVE[4])  = Kdv * ASC[4] + QSK*(CPLSf[4]-CVEf[4]);
+  dt(AVE[5])  = Kdv * ASC[5] + QSK*(CPLSf[5]-CVEf[5]);
+  dt(AVE[6])  = Kdv * ASC[6] + QSK*(CPLSf[6]-CVEf[6]);
+
+  # brain plasma & tissue
+  dt(AVB[0])  = QBRN*(CPLSf[0]-CVBf[0]) + PAB[0]*(CBf[0]-CVBf[0]);
+  dt(AVB[1])  = QBRN*(CPLSf[1]-CVBf[1]) + PAB[1]*(CBf[1]-CVBf[1]);
+  dt(AVB[2])  = QBRN*(CPLSf[2]-CVBf[2]) + PAB[2]*(CBf[2]-CVBf[2]);
+  dt(AVB[3])  = QBRN*(CPLSf[3]-CVBf[3]) + PAB[3]*(CBf[3]-CVBf[3]);
+  dt(AVB[4])  = QBRN*(CPLSf[4]-CVBf[4]) + PAB[4]*(CBf[4]-CVBf[4]);
+  dt(AVB[5])  = QBRN*(CPLSf[5]-CVBf[5]) + PAB[5]*(CBf[5]-CVBf[5]);
+  dt(AVB[6])  = QBRN*(CPLSf[6]-CVBf[6]) + PAB[6]*(CBf[6]-CVBf[6]);
+  dt(AB[0])   = PAB[0]*(CVBf[0]-CBf[0]);
+  dt(AB[1])   = PAB[1]*(CVBf[1]-CBf[1]);
+  dt(AB[2])   = PAB[2]*(CVBf[2]-CBf[2]);
+  dt(AB[3])   = PAB[3]*(CVBf[3]-CBf[3]);
+  dt(AB[4])   = PAB[4]*(CVBf[4]-CBf[4]);
+  dt(AB[5])   = PAB[5]*(CVBf[5]-CBf[5]);
+  dt(AB[6])   = PAB[6]*(CVBf[6]-CBf[6]);
+
+  # Fat plasma & tissue
+  dt(AVF[0])  = QFAT*(CPLSf[0]-CVFf[0]) + PAF[0]*(CFf[0]-CVFf[0]);
+  dt(AVF[1])  = QFAT*(CPLSf[1]-CVFf[1]) + PAF[1]*(CFf[1]-CVFf[1]);
+  dt(AVF[2])  = QFAT*(CPLSf[2]-CVFf[2]) + PAF[2]*(CFf[2]-CVFf[2]);
+  dt(AVF[3])  = QFAT*(CPLSf[3]-CVFf[3]) + PAF[3]*(CFf[3]-CVFf[3]);
+  dt(AVF[4])  = QFAT*(CPLSf[4]-CVFf[4]) + PAF[4]*(CFf[4]-CVFf[4]);
+  dt(AVF[5])  = QFAT*(CPLSf[5]-CVFf[5]) + PAF[5]*(CFf[5]-CVFf[5]);
+  dt(AVF[6])  = QFAT*(CPLSf[6]-CVFf[6]) + PAF[6]*(CFf[6]-CVFf[6]); 
+  dt(AF[0])   = PAF[0]*(CVFf[0]-CFf[0]);
+  dt(AF[1])   = PAF[1]*(CVFf[1]-CFf[1]);
+  dt(AF[2])   = PAF[2]*(CVFf[2]-CFf[2]);
+  dt(AF[3])   = PAF[3]*(CVFf[3]-CFf[3]);
+  dt(AF[4])   = PAF[4]*(CVFf[4]-CFf[4]);
+  dt(AF[5])   = PAF[5]*(CVFf[5]-CFf[5]);
+  dt(AF[6])   = PAF[6]*(CVFf[6]-CFf[6]);
+  
+  # SP plasma & tissue
+  dt(AVSP[0]) = QSP*(CPLSf[0]-CVSPf[0]) + PASP[0]*(CSPf[0]-CVSPf[0]); 
+  dt(AVSP[1]) = QSP*(CPLSf[1]-CVSPf[1]) + PASP[1]*(CSPf[1]-CVSPf[1]); 
+  dt(AVSP[2]) = QSP*(CPLSf[2]-CVSPf[2]) + PASP[2]*(CSPf[2]-CVSPf[2]); 
+  dt(AVSP[3]) = QSP*(CPLSf[3]-CVSPf[3]) + PASP[3]*(CSPf[3]-CVSPf[3]); 
+  dt(AVSP[4]) = QSP*(CPLSf[4]-CVSPf[4]) + PASP[4]*(CSPf[4]-CVSPf[4]); 
+  dt(AVSP[5]) = QSP*(CPLSf[5]-CVSPf[5]) + PASP[5]*(CSPf[5]-CVSPf[5]); 
+  dt(AVSP[6]) = QSP*(CPLSf[6]-CVSPf[6]) + PASP[6]*(CSPf[6]-CVSPf[6]); 
+  dt(ASP[0])  = PASP[0]*(CVSPf[0]-CSPf[0]);
+  dt(ASP[1])  = PASP[1]*(CVSPf[1]-CSPf[1]);
+  dt(ASP[2])  = PASP[2]*(CVSPf[2]-CSPf[2]);
+  dt(ASP[3])  = PASP[3]*(CVSPf[3]-CSPf[3]);
+  dt(ASP[4])  = PASP[4]*(CVSPf[4]-CSPf[4]);
+  dt(ASP[5])  = PASP[5]*(CVSPf[5]-CSPf[5]);
+  dt(ASP[6])  = PASP[6]*(CVSPf[6]-CSPf[6]);
+  
+  # Rapidly-perfused tissue
+  dt(ARP[0])  = QRP*(CPLSf[0]-CRPf[0]);
+  dt(ARP[1])  = QRP*(CPLSf[1]-CRPf[1]);
+  dt(ARP[2])  = QRP*(CPLSf[2]-CRPf[2]);
+  dt(ARP[3])  = QRP*(CPLSf[3]-CRPf[3]);
+  dt(ARP[4])  = QRP*(CPLSf[4]-CRPf[4]);
+  dt(ARP[5])  = QRP*(CPLSf[5]-CRPf[5]);
+  dt(ARP[6])  = QRP*(CPLSf[6]-CRPf[6]);
+  
+  # Metabolism from liver and kidney 
+  RAMetLiv[0] = CLLiv[0] * CLf[0];
+  RAMetLiv[1] = CLLiv[1] * CLf[1];
+  RAMetLiv[2] = CLLiv[2] * CLf[2];
+  RAMetLiv[3] = CLLiv[3] * CLf[3];
+  RAMetLiv[4] = CLLiv[4] * CLf[4];
+  RAMetLiv[5] = CLLiv[5] * CLf[5];
+  RAMetLiv[6] = CLLiv[6] * CLf[6];
+  RAMetGI[0] = CLGI[0] * CGIf[0];
+  RAMetGI[1] = CLGI[1] * CGIf[1];
+  RAMetGI[2] = CLGI[2] * CGIf[2];
+  RAMetGI[3] = CLGI[3] * CGIf[3];
+  RAMetGI[4] = CLGI[4] * CGIf[4];
+  RAMetGI[5] = CLGI[5] * CGIf[5];
+  RAMetGI[6] = CLGI[6] * CGIf[6];
+ 
+  # Total metabolism
+  dt(AMET[0]) = RAMetLiv[0] + RAMetGI[0];
+  dt(AMET[1]) = RAMetLiv[1] + RAMetGI[1];
+  dt(AMET[2]) = RAMetLiv[2] + RAMetGI[2];
+  dt(AMET[3]) = RAMetLiv[3] + RAMetGI[3];
+  dt(AMET[4]) = RAMetLiv[4] + RAMetGI[4];
+  dt(AMET[5]) = RAMetLiv[5] + RAMetGI[5];
+  dt(AMET[6]) = RAMetLiv[6] + RAMetGI[6];
+
+  # Exhaled
+  dt(AEXH[0]) = REXH[0];
+  dt(AEXH[1]) = REXH[1];
+  dt(AEXH[2]) = REXH[2];
+  dt(AEXH[3]) = REXH[3];
+  dt(AEXH[4]) = REXH[4];
+  dt(AEXH[5]) = REXH[5];
+  dt(AEXH[6]) = REXH[6];
+ 
+  # Plasma
+  dt(APLS[0]) = RINH[0] - dt(AEXH[0]) + RIV[0] + QC75*(CV[0]-CPLS[0]) + (LYMPHSWTCH*KA[0]*ALU[0]);
+  dt(APLS[1]) = RINH[1] - dt(AEXH[1]) + RIV[1] + QC75*(CV[1]-CPLS[1]) + (LYMPHSWTCH*KA[1]*ALU[1]);
+  dt(APLS[2]) = RINH[2] - dt(AEXH[2]) + RIV[2] + QC75*(CV[2]-CPLS[2]) + (LYMPHSWTCH*KA[2]*ALU[2]);
+  dt(APLS[3]) = RINH[3] - dt(AEXH[3]) + RIV[3] + QC75*(CV[3]-CPLS[3]) + (LYMPHSWTCH*KA[3]*ALU[3]);
+  dt(APLS[4]) = RINH[4] - dt(AEXH[4]) + RIV[4] + QC75*(CV[4]-CPLS[4]) + (LYMPHSWTCH*KA[4]*ALU[4]);
+  dt(APLS[5]) = RINH[5] - dt(AEXH[5]) + RIV[5] + QC75*(CV[5]-CPLS[5]) + (LYMPHSWTCH*KA[5]*ALU[5]);
+  dt(APLS[6]) = RINH[6] - dt(AEXH[6]) + RIV[6] + QC75*(CV[6]-CPLS[6]) + (LYMPHSWTCH*KA[6]*ALU[6]);
+
+  # Liver
+  dt(AL[0])   = QLIVH*CPLSf[0] + QLIVGI*CGIf[0] - QLIV*CLf[0] - RAMetLiv[0];
+  dt(AL[1])   = QLIVH*CPLSf[1] + QLIVGI*CGIf[1] - QLIV*CLf[1] - RAMetLiv[1];
+  dt(AL[2])   = QLIVH*CPLSf[2] + QLIVGI*CGIf[2] - QLIV*CLf[2] - RAMetLiv[2];
+  dt(AL[3])   = QLIVH*CPLSf[3] + QLIVGI*CGIf[3] - QLIV*CLf[3] - RAMetLiv[3];
+  dt(AL[4])   = QLIVH*CPLSf[4] + QLIVGI*CGIf[4] - QLIV*CLf[4] - RAMetLiv[4];
+  dt(AL[5])   = QLIVH*CPLSf[5] + QLIVGI*CGIf[5] - QLIV*CLf[5] - RAMetLiv[5];
+  dt(AL[6])   = QLIVH*CPLSf[6] + QLIVGI*CGIf[6] - QLIV*CLf[6] - RAMetLiv[6];
+
+  # GI
+  dt(AGI[0])  = QLIVGI*(CPLSf[0]-CGIf[0]) + (1-LYMPHSWTCH)*KA[0]*ALU[0] - RAMetGI[0];
+  dt(AGI[1])  = QLIVGI*(CPLSf[1]-CGIf[1]) + (1-LYMPHSWTCH)*KA[1]*ALU[1] - RAMetGI[1];
+  dt(AGI[2])  = QLIVGI*(CPLSf[2]-CGIf[2]) + (1-LYMPHSWTCH)*KA[2]*ALU[2] - RAMetGI[2];
+  dt(AGI[3])  = QLIVGI*(CPLSf[3]-CGIf[3]) + (1-LYMPHSWTCH)*KA[3]*ALU[3] - RAMetGI[3];
+  dt(AGI[4])  = QLIVGI*(CPLSf[4]-CGIf[4]) + (1-LYMPHSWTCH)*KA[4]*ALU[4] - RAMetGI[4];
+  dt(AGI[5])  = QLIVGI*(CPLSf[5]-CGIf[5]) + (1-LYMPHSWTCH)*KA[5]*ALU[5] - RAMetGI[5];
+  dt(AGI[6])  = QLIVGI*(CPLSf[6]-CGIf[6]) + (1-LYMPHSWTCH)*KA[6]*ALU[6] - RAMetGI[6];
+  
+  # Metabolites 
+  dt(ADBCA) = DLM_DBCA*dt(AMET[0]) * MWDBCA/MWDLM - KUriDBCA * ADBCA;
+
+  dt(AFPBA) = (cCF_FPBA*dt(AMET[1])*MWFPBA/MWCYF + 
+                tCF_FPBA*dt(AMET[2])*MWFPBA/MWCYF) - KUriFPBA * AFPBA;
+  
+  dt(A3PBA) = (DLM_3PBA*dt(AMET[0])*MW3PBA/MWDLM +
+                cCM_3PBA*dt(AMET[3])*MW3PBA/MWCPM +
+                tCM_3PBA*dt(AMET[4])*MW3PBA/MWCPM +
+                cPM_3PBA*dt(AMET[5])*MW3PBA/MWPRM +
+                cPM_3PBA*dt(AMET[6])*MW3PBA/MWPRM) - KUri3PBA * A3PBA;  
+  
+  dt(ADCCAc) = (cCF_DCCA*dt(AMET[1])*MWDCCA/MWCYF + 
+                cCM_DCCA*dt(AMET[3])*MWDCCA/MWCPM +
+                cPM_DCCA*dt(AMET[5])*MWDCCA/MWPRM) - KUriDCCAc * ADCCAc;
+  
+  dt(ADCCAt) = (tCF_DCCA*dt(AMET[2])*MWDCCA/MWCYF + 
+                 tCM_DCCA*dt(AMET[4])*MWDCCA/MWCPM + 
+                 tPM_DCCA*dt(AMET[6])*MWDCCA/MWPRM) - KUriDCCAt * ADCCAt; 
+  
+  dt(AUri3PBA) = KUri3PBA * A3PBA;
+  dt(AUriFPBA) = KUriFPBA * AFPBA;
+  dt(AUriDBCA) = KUriDBCA * ADBCA;
+  dt(AUriDCCAc) = KUriDCCAc * ADCCAc;
+  dt(AUriDCCAt) = KUriDCCAt * ADCCAt;
+  
+} # End of dynamics
+
+
+CalcOutputs {
+  
+  
+  # Mass balance
+  ATOT[0] = ALU[0] + AGI[0] + AVB[0] + ASC[0] + AVE[0] + AB[0] + AVF[0] + AF[0] + AVSP[0] + ASP[0] + ARP[0] + APLS[0] + AL[0] + AFEC[0] + AEXH[0] + AMET[0];
+  ATOT[1] = ALU[1] + AGI[1] + AVB[1] + ASC[1] + AVE[1] + AB[1] + AVF[1] + AF[1] + AVSP[1] + ASP[1] + ARP[1] + APLS[1] + AL[1] + AFEC[1] + AEXH[1] + AMET[1];
+  ATOT[2] = ALU[2] + AGI[2] + AVB[2] + ASC[2] + AVE[2] + AB[2] + AVF[2] + AF[2] + AVSP[2] + ASP[2] + ARP[2] + APLS[2] + AL[2] + AFEC[2] + AEXH[2] + AMET[2];
+  ATOT[3] = ALU[3] + AGI[3] + AVB[3] + ASC[3] + AVE[3] + AB[3] + AVF[3] + AF[3] + AVSP[3] + ASP[3] + ARP[3] + APLS[3] + AL[3] + AFEC[3] + AEXH[3] + AMET[3];
+  ATOT[4] = ALU[4] + AGI[4] + AVB[4] + ASC[4] + AVE[4] + AB[4] + AVF[4] + AF[4] + AVSP[4] + ASP[4] + ARP[4] + APLS[4] + AL[4] + AFEC[4] + AEXH[4] + AMET[4];
+  ATOT[5] = ALU[5] + AGI[5] + AVB[5] + ASC[5] + AVE[5] + AB[5] + AVF[5] + AF[5] + AVSP[5] + ASP[5] + ARP[5] + APLS[5] + AL[5] + AFEC[5] + AEXH[5] + AMET[5];
+  ATOT[6] = ALU[6] + AGI[6] + AVB[6] + ASC[6] + AVE[6] + AB[6] + AVF[6] + AF[6] + AVSP[6] + ASP[6] + ARP[6] + APLS[6] + AL[6] + AFEC[6] + AEXH[6] + AMET[6];
+  
+  # TISSUE VOLUME CHECK
+  VOLTOTALC = VOLBLDC + VOLVEC + VOLBRNC + VOLFATC + VOLSPC + VOLRPC + VOLLIVC + VOLGIC; # (should be 0.85)
+  
+  # PLASMA FLOW CHECK
+  FRTOTALC = FRFATC + FRSKC + FRBRNC + FRLIVC + FRRPC + FRSPC;	#total fractions of tissue plasma flow (should be 1)
+   
+  # Rate of metabolism (ug/hr)
+  RAMet3PBA = KUri3PBA * A3PBA * 1000;
+  RAMetFPBA = KUriFPBA * AFPBA * 1000;
+  RAMetDCCAc = KUriDCCAc * ADCCAc * 1000;
+  RAMetDCCAt = KUriDCCAt * ADCCAt * 1000;
+  
+  # Urine concentration (ug/L)
+  CUri3PBA = ( KUri3PBA * A3PBA * 1000) / VOLURI;
+  CUriDBCA = ( KUriDBCA * ADBCA * 1000 ) / VOLURI;
+  CUriFPBA = ( KUriFPBA * AFPBA * 1000 ) / VOLURI;
+  CUriDCCAc = ( KUriDCCAc * ADCCAc * 1000 ) / VOLURI;
+  CUriDCCAt = ( KUriDCCAt * ADCCAt * 1000) / VOLURI; 
+   
+} # End of CalOutputs
+
+End.
+

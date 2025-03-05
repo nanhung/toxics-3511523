@@ -2,6 +2,7 @@ library(RMCSim)
 library(dplyr)
 
 # Load model
+file.copy("MCSim/mcsim.gPYR_pbk.model.exe", "mcsim.gPYR_pbk.model.exe")
 model <- "gPYR_PBPK.model"
 
 # AUC calculation
@@ -205,5 +206,4 @@ tot_df |> ggplot(aes(x = compound, y = moe, fill = compound)) +
   )
 dev.off()
 
-tot_df
-
+file.remove("mcsim.gPYR_pbk.model.exe")

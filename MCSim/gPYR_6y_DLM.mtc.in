@@ -1,0 +1,53 @@
+#------------------------------------------------------------------------------
+# gPYR_6y_DLM.mtc.in                          
+#------------------------------------------------------------------------------
+
+Integrate (Lsodes, 1e-9, 1e-9, 1);
+
+MonteCarlo ("gPYR_6y_DLM.mtc.out", 100, 56761.1164);
+
+# Parameter for 6y (Mallick et al. 2020)
+BW=21.6;
+HCT=0.37;
+VOLBLDC=0.0742;
+VOLFATC=0.269;
+VOLBRNC=0.058;
+VOLLIVC=0.0255;
+VOLRPC=0.0392;
+VOLGIC=0.0151;
+TV=0.28;
+DS=0.054;
+BF=817.0;
+FRFATC=0.057;
+FRBRNC=0.2923;
+FRLIVC=0.226;
+FRSPC=0.2187;
+
+# Uncertainty
+Distrib (IngDose_DLM, LogNormal, 3.83e-5, 1.09); 
+
+Distrib (u_lnFuPLS, TruncNormal, 0.0, 0.1, -0.2, 0.2); 
+Distrib (u_lnPBRN, TruncNormal, 0.0, 0.3, -0.9, 0.9); 
+Distrib (u_lnPFAT, TruncNormal, 0.0, 0.3, -0.9, 0.9); 
+Distrib (u_lnPGI, TruncNormal, 0.0, 0.3, -0.9, 0.9); 
+Distrib (u_lnPLIV, TruncNormal, 0.0, 0.3, -0.9, 0.9); 
+Distrib (u_lnPRP, TruncNormal, 0., 0.3, -0.9, 0.9); 
+Distrib (u_lnPSP, TruncNormal, 0.0, 0.3, -0.9, 0.9); 
+Distrib (u_lnPVE, TruncNormal, 0.0, 0.3, -0.9, 0.9); 
+Distrib (u_lnPAB, TruncNormal, 0.0, 0.3, -0.9, 0.9); 
+Distrib (u_lnPAF, TruncNormal, 0.0, 0.3, -0.9, 0.9); 
+Distrib (u_lnPASP, TruncNormal, 0.0, 0.3, -0.9, 0.9); 
+Distrib (u_lnCLLiv, TruncNormal, 0.0, 0.4, -1.2, 1.2); 
+Distrib (u_lnCLGI, TruncNormal, 0.0, 0.4, -1.2, 1.2); 
+Distrib (u_lnKA, TruncNormal, 0.0, 0.4, -1.2, 1.2); 
+Distrib (u_lnKFec, TruncNormal, 0.0, 0.4, -1.2, 1.2); 
+
+Simulation { 
+  
+  # Oral
+  POPer = 1e10;   # Only one dose
+  PTLEN   = 0.001;
+ 
+  PrintStep (CPLS_0, CBRN_0, 0, 24, 0.05); 
+
+}
