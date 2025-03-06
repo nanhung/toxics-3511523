@@ -243,11 +243,11 @@ nhanes_data_opm$Compound <- "3PBA"
 #nhanes_data[, -c(1:2)] |> print(n=28)
 #nhanes_data[, -c(1:2)] |> select(ratio) |> range()
 
-x_pbpk_var <- X_pbpk |>
+x_pbk_var <- X_pbk |>
   group_by(Cohort, Compound, Age) |>
   summarise(n=n(), variance = mean(variance)) |> 
   select(-n)
-x_pbpk_ratio <- X_pbpk |> 
+x_pbk_ratio <- X_pbk |> 
   slice(rep(1:n(), each = 100)) |> # variability - 100 individuals
   mutate(lnConc = rnorm(n(), mean, variance^0.5)) |> 
   mutate(Conc = exp(lnConc)) |> 
@@ -255,18 +255,17 @@ x_pbpk_ratio <- X_pbpk |>
   summarise(n=n(), P50 = median(Conc), P95 = quantile(Conc, 0.95)) |> 
   mutate(ratio = P95/P50) |>
   select(-c(n, P50, P95))
-x_diff <- x_pbpk_ratio |> filter(Compound == "Permethrin") |>
-  full_join(nhanes_data[,-c(1:2)], by = c('Age', 'Cohort')) |> 
-  mutate(diff = ratio.y/ratio.x) |> print(n=28)
+x_diff <- x_pbk_ratio |> filter(Compound == "Permethrin") |>
+  full_join(nhanes_data_opm[,c(6,8,7,5)], by = c('Age', 'Cohort')) |> 
+  mutate(diff = ratio.y/ratio.x) 
 x_diff$Age <- factor(x_diff$Age, 
   level = c("< 6", "6 - 11", "12 - 19", "20 - 65", "> 65"))
 x_diff$Cohort <- factor(x_diff$Cohort, 
   level = c("99-00", "01-02", "07-08", "09-10", "11-12", "13-14", "15-16"))
-x_pbpk_join <- full_join(x_pbpk_var, x_pbpk_ratio,
+x_pbk_join <- full_join(x_pbk_var, x_pbk_ratio,
   by = c("Compound", "Cohort", "Age")) 
-
-x <- x_pbpk_join |> filter(Compound == "Permethrin") |>
-  rbind(nhanes_data_opm[c(6,8,7,4,5)])
+x <- x_pbk_join |> filter(Compound == "Permethrin") |>
+  rbind(nhanes_data_opm[,c(6,8,7,4,5)])
 
 p1 <- x_diff |> 
   ggplot(aes(x=Cohort, y=Age, size=diff)) + geom_point() +
@@ -303,11 +302,8 @@ png("fig5_variability.png", width = 1800, height = 1200, res = 200)
 plot_grid(p2, p1, nrow = 2, rel_heights = c(1/3,2/3),  align="v")
 dev.off()
 
-
-
-
 # Trend 
-x_pbpk_prm <- X |> 
+x_pbk_prm <- X |> 
   filter(Approach == 'PBK' & Compound == "Permethrin") |> 
   group_by(Approach, Age, Cohort) |>
   summarise(med = median(Prediction),
@@ -320,7 +316,7 @@ x_bayesmarker_prm <- X |>
             upr = quantile(Prediction, 0.975),
             lor = quantile(Prediction, 0.025))
 
-p2 <- rbind(x_bayesmarker_prm, x_pbpk_prm) |> 
+p2 <- rbind(x_bayesmarker_prm, x_pbk_prm) |> 
     ggplot(aes(x = Cohort, y = med, group=Approach, color = Approach)) +
     geom_point(size = 3) +
     geom_line() +
