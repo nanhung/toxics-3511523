@@ -182,7 +182,7 @@ X.Bayesmarker <- X |> filter(Approach == 'High-throughput') |>
             Bayesmarker_lower = quantile(Prediction, 0.025))
 XX <- full_join(X.Bayesmarker, X.PBK, by = c('Compound', 'Age', 'Cohort')) 
 
-png("fig4_comparison.png", width = 2000, height = 1500, res = 300)
+png("fig4_comparison.png", width = 1800, height = 1200, res = 300)
 XX |>
   ggscatter(x="PBK_median", y="Bayesmarker_median", 
     color = "Age", shape = "Compound", size = 2) +
