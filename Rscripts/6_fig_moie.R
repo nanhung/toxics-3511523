@@ -194,7 +194,7 @@ tot_df <- rbind(dlm_df, tpm_df, cpm_df, ccf_df, tcf_df, ccp_df, tcp_df) |>
   mutate(across(compound, as.factor)) |>
   mutate(compound = fct_relevel(compound, compound_level))
 
-png("MOE.png", width = 2500, height = 1500, res = 300)
+png("fig8_moie.png", width = 2400, height = 1200, res = 300)
 tot_df |> ggplot(aes(x = compound, y = moe, fill = compound)) +
   scale_y_log10(breaks = trans_breaks("log10", function(x) 10^x, n = 3),
                 labels = trans_format("log10", scales::math_format(10^.x))) +
@@ -217,3 +217,4 @@ tot_df |> ggplot(aes(x = compound, y = moe, fill = compound)) +
 dev.off()
 
 file.remove("mcsim.gPYR_pbk.model.exe")
+system("rm *.out")

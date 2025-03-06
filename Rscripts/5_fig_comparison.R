@@ -276,7 +276,7 @@ x_pbk_join <- full_join(x_pbk_var, x_pbk_ratio,
   by = c("Compound", "Cohort", "Age")) 
 x <- x_pbk_join |> filter(Compound == "Permethrin") |>
   rbind(nhanes_data_opm[,c(6,8,7,4,5)])
-x |> print(n=56)
+x_diff |> print(n=28)
 
 p1 <- x_diff |> 
   ggplot(aes(x=Cohort, y=Age, size=diff)) + geom_point() +

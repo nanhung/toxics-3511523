@@ -31,7 +31,7 @@ df$Var <- factor(df$Var, level = c("FPBA", "3PBA", "trans-DCCA",
 df$cohort <- factor(df$cohort, level = cohort)
 
 set_theme <- theme(
-  legend.position  = c(0.5, 0.15),
+  legend.position  = c(0.5, 0.1),
   axis.text        = element_text(color = "black", size = 13),
   axis.ticks.y     = element_line(color = "black"),
   axis.ticks.x     = element_line(color = "black"),
@@ -47,7 +47,7 @@ set_theme <- theme(
 )
 
 p1 <- ggplot(data = df, aes(x=Data, y=Prediction, color = Var, shape = Var)) + 
-  geom_point(alpha=0.5) + 
+  geom_point(alpha=0.5, size=1) + 
   scale_x_log10(#limits=c(0.1,1000),
     breaks = trans_breaks("log10", function(x) 10^x, n = 4),
     labels = trans_format("log10", scales::math_format(10^.x))) +
@@ -66,8 +66,8 @@ p1 <- ggplot(data = df, aes(x=Data, y=Prediction, color = Var, shape = Var)) +
   theme_bw() +
   set_theme +
   xlab("NHANES biomonitoring data (ug/L)") +
-  ylab("PBPK prediction (ug/L)")
+  ylab("PBK prediction (ug/L)")
 
-png("fig3_goodness.png", width = 3200, height = 2700, res = 350)
+png("fig3_goodness.png", width = 2100, height = 1800, res = 300)
 p1
 dev.off()

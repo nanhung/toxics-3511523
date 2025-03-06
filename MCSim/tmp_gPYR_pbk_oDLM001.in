@@ -1,0 +1,15 @@
+#--------------------------------------
+#  gPYR_PBPK_oDLM001.in                       
+#  Simulation file for gPYR_PBPK.model
+#  Model verification w/ avaliable human data
+#--------------------------------------
+
+Integrate (Lsodes, 1e-9, 1e-9, 1);
+
+Simulation { 
+  
+  IngDose_DLM = 0.01;
+  POPer = 1e10;   # Only one dose
+  
+  PrintStep (CUri3PBA, CUriDBCA, 2, 36, 0.1); 
+}

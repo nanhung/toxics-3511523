@@ -1,0 +1,16 @@
+#--------------------------------------
+#  gPYR_PBPK_oCYF003.in                       
+#  Simulation file for gPYR model
+#  Model verification w/ avaliable human data
+#--------------------------------------
+
+Integrate (Lsodes, 1e-9, 1e-9, 1);
+
+Simulation { 
+  
+  #
+  IngDose_CYF = 0.03;
+  POPer = 1e10;   # Only one dose
+  
+  PrintStep (RAMetFPBA, RAMetDCCAc, RAMetDCCAt, 1, 48, 0.1); 
+}

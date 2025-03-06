@@ -1,0 +1,18 @@
+#--------------------------------------
+#  gPYR_PBPK_dCPM31.in
+#  Simulation file for gPYR model
+#  Model verification w/ avaliable human data
+#--------------------------------------
+
+Integrate (Lsodes, 1e-9, 1e-9, 1);
+
+Simulation { 
+
+  #
+  ConDose_CPM   = 31.0; # contact dose (mg)
+  ConPer        = 8.0;     # hour
+
+  #
+  PrintStep (RAMetDCCAc, RAMetDCCAt, RAMet3PBA, 2, 100, 0.1); 
+
+}
