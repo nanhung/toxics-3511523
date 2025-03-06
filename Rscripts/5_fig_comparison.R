@@ -192,6 +192,13 @@ XX |> mutate(ratio = Bayesmarker_median/PBK_median) |>
   group_by(Compound) |> 
   summarise(Located10fold = sum(consistency)/n())
 
+XX |> filter(Compound == "Deltamethrin") |> 
+  select(Cohort, Bayesmarker_median, PBK_median)
+
+XX |> filter(Compound == "Cyfluthrin") |> 
+  select(Cohort, Bayesmarker_median, PBK_median)
+
+
 png("fig4_comparison.png", width = 1800, height = 1200, res = 300)
 XX |>
   ggscatter(x="PBK_median", y="Bayesmarker_median", 
@@ -269,6 +276,7 @@ x_pbk_join <- full_join(x_pbk_var, x_pbk_ratio,
   by = c("Compound", "Cohort", "Age")) 
 x <- x_pbk_join |> filter(Compound == "Permethrin") |>
   rbind(nhanes_data_opm[,c(6,8,7,4,5)])
+x |> print(n=56)
 
 p1 <- x_diff |> 
   ggplot(aes(x=Cohort, y=Age, size=diff)) + geom_point() +
@@ -529,7 +537,7 @@ p5 <- dendro_data_k(hc_a, 2) |>
   plot_ggdendro(direction = "tb", expand.y = 0.2) +
   theme_void() + ggtitle("Total") + set_theme
 
-png("fig7_cluster.png", width = 2800, height = 2100, res = 300)
+png("fig7_cluster.png", width = 3000, height = 1800, res = 300)
 plot_grid(p5, plot_grid(p1, p2, p3, p4,  nrow = 1), nrow = 2)
 dev.off()
 

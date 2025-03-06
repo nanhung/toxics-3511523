@@ -118,25 +118,25 @@ Protection Agency, Sacramento, CA, USA; \\ }
 
 % Abstract (Do not insert blank lines, i.e. \\) 
 \abstract{Pyrethroid insecticides have been extensively utilized in
-agriculture and residential areas in the United States. We attempt to
-evaluate their exposure risk in populations by age using available
-biomonitoring data. We analyzed pyrethroid metabolite concentrations in
+agriculture and residential areas in the United States. This study
+evaluated the exposure risk by age using available biomonitoring data. 
+We analyzed pyrethroid metabolite concentrations in
 urine using the National Health and Nutrition Examination Survey
 (NHANES) data. Reverse dosimetry was conducted with a high-throughput
 model and a physiologically based kinetic (PBK) model integrated with a
 Bayesian inference framework. We further derived Benchmark Dose (BMD)
-values and systematic points of departure in rats using Bayesian BMD and
-PBK models. Margins of exposure (MOE) were calculated to evaluate
+values and systemic points of departure in rats using Bayesian BMD and
+PBK models. Margins of exposure (MOE) were calculated to assess
 neurotoxic risk based on estimated daily oral intake and dose metrics in
-plasma and brain. Results from both models showed higher pyrethroid
-exposure in young children compared to other age groups. All estimated
+plasma and brain. Results from both models indicated that young children have
+higher pyrethroid exposure compared to other age groups. All estimated
 risk values were within acceptable levels of acute neurotoxic effect.
 Additionally, MOEs calculated from oral doses were lower than those
 derived from internal doses, highlighting that traditional external
 exposure assessments tend to overestimate risk compared to advanced
 internal dose-based techniques. In conclusion, combining high-throughput
 and PBK approaches enhances the understanding of human health risks
-associated with pyrethroid exposures, underscoring their potential for
+associated with pyrethroid exposures, demonstrating their potential for
 future applications in exposure tracking and health risk assessment.}
 
 % Keywords
@@ -198,10 +198,10 @@ Pyrethroids, synthetic insecticides prevalent in residential and agricultural
 pest control, have raised health concerns due to their extensive use and
 potential adverse effects \citep{burns2018pyrethroid}. Their usage has
 significantly increased in recent decades, both in the United States and
-globally. Growing evidence suggested that exposure to pyrethroids may linked to
+globally. Growing evidence suggests that exposure to pyrethroids may linked to
 adverse health effects, including diabetes, neurotoxicity, and cardiovascular
 disease \citep{park2019environmental, bao2020association,
-kim2021environmental}. Consequently, scientists and researchers have actively
+kim2021environmental}. Consequently, researchers have actively
 monitored and reconstructed pyrethroid exposure among residential and
 occupational populations \citep{zartarian2012quantifying,
 bravo2022occupational}.
@@ -216,7 +216,7 @@ including The Standard Operating Procedures for Residential Pesticide Exposure
 Assessment \citep{us2012standard}, Draft Protocol for Measuring Children's
 Non-Occupational Exposure to Pesticides by all Relevant Pathways
 \citep{us2001draft}, and the Stochastic Human Exposure and Dose Simulation
-(SHEDS) Model for Multimedia, Multipathway Pollutants, to estimate cumulative
+(SHEDS) Model for Multimedia, Multipathway Pollutants to estimate cumulative
 residential exposures to pyrethroids for children aged 4-6 years. Among these
 approaches, the SHEDS framework was initially developed to estimate children's
 residential exposure and dose to chlorpyrifos via dermal contact and
@@ -238,7 +238,7 @@ for chemical risk assessment
 \citep{blount2007perchlorate, sobus2015uses}. Health-based guidance
 values derived from biomonitoring data provide effective and
 comprehensible evaluations of pyrethroid exposure potential
-\citep{apel2023human}. Commonly used biomarker for estimating population
+\citep{apel2023human}. Commonly used biomarkers for estimating population
 exposure include urinary metabolites such as 3-phenoxybenzoic acid
 (3PBA), 4-fluoro-3-phenoxybenzoic acid (FPBA),
 3-(2,2-dibromovinyl)-2,2-dimethylcyclopropane carboxylic acid (DBCA),
@@ -246,19 +246,19 @@ and
 cis-/trans-3-(2,2-dichlorovinyl)-2,2-dimethylcyclopropane-1-carboxylic
 acid (DCCA). These biomarkers can either be linked to specific
 pyrethroid parent compounds or shared among multiple pyrethroids. For
-example, FPBA and DBCA are specific to cyfluthrin and deltamethrin,
-respectively, while 3PBA is a general metabolite of several pyrethroids,
-exhibiting lower toxicity than the parent compounds.
+example, FPBA and DBCA are specific biomarkers of cyfluthrin and deltamethrin exposure,
+respectively, while 3PBA is a general metabolite of several pyrethroids that
+exhibit lower toxicity than the parent compounds.
 
-Biomonitoring data in the U.S. population have been extensively tracked by the
-National Health and Nutrition Examination Survey (NHANES) over decades. A
+Biomonitoring data in the U.S. population have been extensively tracked over decades by the
+National Health and Nutrition Examination Survey (NHANES). A
 landmark study by \citet{barr2010urinary} analyzed NHANES data collected
-between 1999 and 2002. They detected 3PBA in more than 70\% of over 5,000
+between 1999 and 2002. The analysis showed that 3PBA was detected in more than 70\% of the over 5,000
 participants, with geometric mean concentrations of 0.29 ng/mL in adults and
-0.41 ng/mL in children, indicating that children may experience higher
+0.41 ng/mL in children. Theses data also indicate that children may experience higher
 pyrethroid exposure. An observational study by \citet{morgan2007observational}
 focused on 127 preschool children in homes and daycare centers in six Ohio
-counties. Their study found 3PBA in 67\% of urine samples (median: 0.3 ng/mL;
+counties. Results showed 3PBA in 67\% of urine samples (median: 0.3 ng/mL;
 maximum: 33.8ng/mL). Permethrin was detected most frequently in dust (100\%) and
 hand wipe samples (>78\%). Similarly, \citet{trunnelle2014urinary} studied 83
 California children aged 2-8 near agricultural areas, reporting a 60 \%
@@ -269,10 +269,10 @@ sampling time, and inter-individual variability \citep{aylward2017variation}.
 Despite these limitations, biomonitoring data can be integrated with
 computational exposure modeling tools for exposure reconstruction.
 
-TK modeling is an example of ``reverse-dosimetry'' approach to
+TK modeling is an example of a ``reverse-dosimetry'' approach to
 estimate the exposure profile of chemicals
 \citep{egeghy2011assessment, lin2023reconstructing} based on the
-observed chemical levels in human body. The U.S. EPA's ExpoCast
+observed chemical levels in human body. U.S. EPA's ExpoCast
 project developed a comprehensive high-throughput approach in the
 Systematic Empirical Evaluation of Models (SEEM) framework to
 effectively predict the population exposure for chemical prioritization
@@ -281,25 +281,25 @@ used to predict the daily intake based on NHANES biomonitoring data with
 Bayesian statistical approach. 
 It is noteworthy that the predicted outcomes were compared with other high-throughput
 approaches, such as SHEDS \citep{isaacs2014sheds} and the consensus
-model, which integrated multiple forward exposure model predictions
+model, which integrates multiple forward exposure model predictions
 \citep{ring2018consensus}.
 
 To better predict chemical intake, PBK models
 have been applied in several research studies \citep{tan2006use, allen2007use,
 lyons2008computational, tornero2012pharmacokinetic, moreau2017using}. This
 sophisticated modeling approach considers absorption, distribution, metabolism,
-and elimination processes in the body. Compared to the U.S. EPA's
+and elimination processes in the body. Compared to U.S. EPA's
 high-throughput approach, which is based on generic TK model and assumes
-steady-state equilibrium with mass balance (100\% absorption) to simplified
+steady-state equilibrium with mass balance (100\% absorption) in a simplified
 model structure, PBK models provide more accurate parameter estimations and
-have been validated with experimental TK data. A study conducted by the U.S.
+have been validated with experimental TK data. A study conducted by U.S.
 EPA reported that ``The SEEM approach evaluates predictors of exposure based on
 how well they correlate with estimates of chemical intake rate from
 biomonitoring'' \citep{ring2018consensus}. Thus, the reliability of chemical
 intake rates inferred from biomonitoring data is crucial for determining model
 performance. It is essential to examine the quality and
-representativeness of biomonitoring data alongside model parameters. Given the various prediction
-tools developed, each with strengths and uncertainties in exposure prediction,
+representativeness of biomonitoring data alongside model parameters. Given the various predictive
+tools available, each with strengths and uncertainties in exposure prediction,
 integrating information from different tools can enhance the scientific
 rigor of the exposure assessment process \citep{moreau2017using}.
 
@@ -345,7 +345,7 @@ are addressed as follows:
   also addresses the stoichiometric fraction of transformation between
   multiple parent compounds and their metabolites.
 \item
-  \textbf{Non-detect Values Below the Limit of Detection (LOD):}
+  \textbf{Non-detect Values below the Limit of Detection (LOD):}
   Nondetect values below the LOD introduce uncertainty in exposure
   estimation. Bayesian inference with the PBK model was used to predict
   these non-detect values. The high-throughput method assumes that
@@ -356,13 +356,13 @@ are addressed as follows:
   \textbf{Short Half-Lives of Pyrethroids and Metabolites:} Pyrethroids
   and their metabolites typically have short half-lives less than 24
   hours \citep{hays2007biomonitoring}, meaning their concentrations
-  change rapidly over a short period. This study used NHANES spot urine
-  samples as surrogates for 24-hour average urinary concentrations,
-  which may underestimate the daily dose rate due to random sampling
+  change rapidly over a short period. NHANES spot urine
+  samples were used as surrogates for 24-hour average urinary concentrations. 
+  This may underestimate the daily dose rate due to random sampling
   times relative to exposure events \citep{aylward_interpreting_2012}.
   Under the same daily exposure dose but with different dosing time
   intervals, biomonitoring using spot urine samples and 24-hour averages
-  can vary widely. Urinary half-lives in humans of approximately 12
+  can vary widely. Human urinary half-lives of approximately 12
   hours have been measured for several pyrethroids following oral
   exposures \citep{leng1997biological, woollen_metabolism_1992}. Kinetic
   simulations indicate that once-daily exposures lead to within-day
@@ -396,24 +396,23 @@ predicted exposure levels with effect thresholds. Note: BMD, Benchmark Dose; BMD
 
 \subsection{NHANES biomonitoring data}\label{nhanes-biomonitoring-data}
 
-We utilized the NHANES database for exposure reconstruction. Data
+The NHANES database was utilized for exposure reconstruction. Data
 collection began with the biennial cycle spanning 1999-2001, covering
 the general U.S. population aged six years and older. Seven subsequent
 cycles were conducted to investigate pyrethroid exposure. Notably, only
 the 1999-2000 and 2001-2002 cycles conducted comprehensive surveys of
-five metabolites (cis- and trans-DCCA, 3PBA, FPBA, and DBCA). Over time,
+the five pyrethroid metabolites (cis- and trans-DCCA, 3PBA, FPBA, and DBCA). Over time,
 the metabolites cis-DCCA and DBCA were gradually phased out from the
 survey, with their last inclusion noted in the 2007-2008 and 2010-2011
 cycles, respectively. Detailed information about the metabolites
 measured by NHANES in each cycle can be founded in Table \ref{tab:taba1}.
 It is worth noting that the LODs were not consistent across cycles.
 
-\subsection{The physiologically based kinetic
-model}\label{the-physiologically-based-kinetic-model}
+\subsection{The physiologically based kinetic model}\label{the-physiologically-based-kinetic-model}
 
-A generic PBK model, previously developed by the Council for the
+A generic PBK model previously developed by the Council for the
 Advancement of Pyrethroid Human Risk Assessment
-\citep{song2019evaluation, mallick2020development, mallick_physiologically_2020},
+\citep{song2019evaluation, mallick2020development, mallick_physiologically_2020}
 was used to describe the TK of pyrethroids in humans. This model was
 derived and validated using time-course data from rats
 \citep{mirfazaelian_development_2006, tornero2010evaluation}. We
@@ -444,14 +443,13 @@ description of the critical parameters relevant to urine concentration,
 along with their corresponding values used in the PBK model can be found in
 the Table \ref{tab:taba3}. Specifically, physiological parameters such
 as body weight, urine creatinine, and daily creatinine were found to be
-associated with urine concentration, while factors such as blood flow
+associated with urine concentration of pyrethroid metabolites, while factors such as blood flow
 and organ weight were not considered impactful. Additionally,
 chemical-specific parameters, including the rate constants of oral
 absorption and fecal elimination are also directly related to
-metabolites urine concentration.
+urine concentration of metabolites.
 
-\subsection{Bayesian population
-modeling}\label{bayesian-population-modeling}
+\subsection{Bayesian populationmodeling}\label{bayesian-population-modeling}
 
 Bayesian population modeling was adopted to predict population exposure
 to pyrethroids in residential scenarios across all age groups
@@ -482,10 +480,10 @@ distributions with a standard deviation of 0.3, corresponding to a
 geometric standard deviation of 1.7.
 
 Physiological parameters, such as body weight, were sourced from NHANES.
-To reduce computational burden, the chemical-specific parameter (e.g.,
+To reduce computational burden, the chemical-specific parameters (e.g.,
 transformation fractions and isomeric ratios) were set to fixed values
 based on \citet{quindroit2019estimating}. The intake rate ratio between
-cypermethrin and permethrin was set by referring to the California
+cypermethrin and permethrin was informed by the California
 Department of Pesticide Regulation's (DPR) Pesticide Use Reporting
 database (\url{https://www.cdpr.ca.gov/docs/pur/purmain.htm}) and
 previous results from the high-throughput model
@@ -494,7 +492,7 @@ previous results from the high-throughput model
 \subsection{High-throughput model and other exposure prediction
 tools}\label{high-throughput-model-and-other-exposure-prediction-tools}
 
-The U.S. EPA's ExpoCast project provides reliable intake estimates based
+U.S. EPA's ExpoCast project provides reliable intake estimates based
 on NHANES biomonitoring data \citep{wambaugh2013high}. This approach
 uses Bayesian statistical methods to infer the probabilistic exposure of
 intake rates for parent chemicals, assuming a log-normal distribution of
@@ -510,13 +508,13 @@ fractions of each metabolite were also calculated.
 
 In addition to the exposure estimates from biomonitoring data, numerous
 studies and databases related to pyrethroid exposure and risk assessment
-were reviewed to compare and summarize the estimation of exposure doses.
-The exposure predictions from the U.S. EPA CompTox Chemicals Dashboard
+were reviewed to compare and summarize the estimated exposure doses.
+Exposure predictions from the U.S. EPA CompTox Chemicals Dashboard
 (\url{https://comptox.epa.gov/dashboard/}) were adopted to compare with
 the estimated exposure from the current study. The web-based application
 includes predictions of daily chemical exposure based on the results of
-EPA's ExpoCast project, and utilizing approaches from Chemical and
-Products Database, SEEM, and NHANES exposure inferences
+U.S. EPA's ExpoCast project. The predictions was based on the approaches 
+from Chemical and Products Database, SEEM, and NHANES exposure inferences
 \citep{dionisio2018chemical, wambaugh2022exposure}.
 
 \subsection{Exposure variability}\label{exposure-variability}
@@ -559,10 +557,9 @@ The default models for continuous data and non-informative priors were
 used to fit the dose-response data, using Markov chain Monte Carlo
 (MCMC) simulation. Three Markov chains were calculated with 30,000
 iterations per chain. The model distributions were estimated using the
-last half of iterations (15,000 iterations per chain). The model average
-from 8 continuous models using the posterior model weights was used to
-establish the BMD distribution. One standard deviation of the response
-from the control was chosen for BMD as the suggested choice by U.S. EPA.
+last half of the iterations (15,000 iterations per chain). 
+The determination of BMD was based on model averages from 8 continuous models and using the posterior model weights. 
+One standard deviation of the response from the control was chosen for BMD as suggested by U.S. EPA.
 
 \subsection{Risk estimates}\label{risk-estimates}
 
@@ -580,29 +577,29 @@ of the compound in question. For this analysis, the MOE was calculated by
 dividing the Benchmark dose lower confidence limit (BMDL) by the exposure
 estimate of pyrethroid.
 
-Compared to the MOE, the MOIE is a relatively advanced exposure
-assessment strategy that relies on the sophisticated PBK model to
-provide a robust evaluation for decision-making
-\citep{bessems_margin_2017}. Because of the correlation between brain
-concentration and acute neurotoxic effects
-\citep{scollon_correlation_2011}, this study derived the MOIE by
-dividing BMDL-derived dose metrics, such as peak concentration (Cmax)
-and area under the curve (AUC) in the plasma and the brain. The rat PBK
-model from \citet{song2019evaluation} was applied with the BMDL to
-simulate the time-concentration curve based on a single oral intake in
-\citet{wolansky_relative_2006}, and to estimate the dose metrics. The
-refined life-stage human PBK model was applied with Monte Carlo
-simulations, to estimate the distribution of the four dose metrics
-according to the estimated daily exposure dose. 
+Compared to the MOE, the MOIE is a relatively advanced exposure assessment
+strategy that relies on the sophisticated PBK model to provide a robust
+evaluation for decision-making \citep{bessems_margin_2017}. Because of the
+correlation between brain concentration and acute neurotoxic effects
+\citep{scollon_correlation_2011}, this study calculated the MOIE by using PBK-derived
+systemic BMDL divided by dose metrics, such as peak concentration (Cmax) and
+area under the curve (AUC) in the plasma and the brain. The rat PBK model from
+\citet{song2019evaluation} was applied with the BMDL to simulate the
+time-concentration curve based on a single oral intake in
+\citet{wolansky_relative_2006}, and to estimate the dose metrics. The refined
+life-stage human PBK model was applied with Monte Carlo simulations, to
+estimate the distribution of the four dose metrics according to the estimated
+daily exposure dose. 
 
 The PBK model builds on the comprehensive sensitivity analysis reported by
-\citet{mallick2020development}. The study identified the brain partition coefficient and
-the unbound fraction in plasma as the most sensitive parameters affecting
-pyrethroid distribution, followed by metabolic clearance and permeability. Key
-physiological parameters, such as body weight, cardiac output, hematocrit,
-hepatic plasma flow, and fat volume, were also found to be highly influential.
-In this research, we adopted these previously validated parameters,
-applying compound-specific values to our model as outlined in \ref{tab:taba4}.
+\citet{mallick2020development}. The study identified the brain partition
+coefficient and the unbound fraction in plasma as the most sensitive parameters
+affecting pyrethroid distribution, followed by metabolic clearance and
+permeability. Key physiological parameters, such as body weight, cardiac
+output, hematocrit, hepatic plasma flow, and fat volume, were also found to be
+highly influential. In this research, compound-specific values and uncertainty 
+levels were applied to these previously validated parameters as
+outlined in Table \ref{tab:taba4}.
 
 
 \subsection{Computational settings and
@@ -711,9 +708,11 @@ were \(1.27 \times 10^{-5}\) mg/kg-d by the high-throughput model and \(2.73
 
 \begin{figure}[H]
 \centering
+\begin{adjustwidth}{-2cm}{}
 \centering
 \includegraphics[width=\linewidth]{figures/fig4_comparison}
 \hfill
+\end{adjustwidth}
 \caption{Comparison of exposure predictions from the PBK model and
 high-throughput approaches, highlighting similarities and discrepancies. The
 solid line represents a perfect match between the two methods, while dotted and
@@ -762,23 +761,32 @@ dosimetry because it was the only compound with a detection rate over
 for 3PBA was over 33\%, which correspond to the expected concerns about
 data reliability \citep{faure_evaluation_2020}. Figure \ref{fig:fig5}
 shows the differences in P95/P50 across age groups for 3PBA and
-permethrin. The highest predicted ratio (19.8) for 3PBA was observed in
+permethrin. The highest estimated ratio (19.8) for 3PBA was observed in
 the 6-11 age group during 1999-2000. In comparison, the ratio for
-permethrin in the same group was estimated to be 10.7, indicating a
-twofold difference between the P95/P50 values, possibly due to other
+permethrin in the same group was estimated to be 12.6, indicating a
+1.6 times difference between the P95/P50 values, possibly due to other
 unknown factors (e.g., inter-individual variability). Across all cohorts
 and age groups, the P95/P50 for 3PBA ranged from 7.0 (6-11 years old;
 2013-2014) to 19.8, reflecting wide inter-individual variation in dose
 rates and the low half-life and exposure interval ratio. Overall, the
 ratio for 3PBA is higher than that for its parent compound, permethrin,
-for which P95/P50 ranged 4.9 (6-11 years old; 2011-2012) to 17.8 (12-19
-years old; 2007-2008). The factor of P95/P50 difference between 3PBA and
-permethrin ranged from 0.8 (\textgreater65 years; 2007-2008) to 2.09
+for which P95/P50 ranged 4.8 (6-11 years old; 2011-2012) to 11.4 (\textgreater65
+years old; 2001-2002). The factor of P95/P50 difference between 3PBA and
+permethrin ranged from 0.86 (12-19 years; 1999-2000) to 2.09
 (12-19 years old; 2015-2016), with no significant differences across age
 groups.
 
 \begin{figure}[H]
-\includegraphics[width=1\linewidth,]{figures/fig5} \caption{Variability in exposure estimates across age groups. Variability in exposure is shown using P95/P50 ratios for 3PBA and permethrin across age groups. Greater variability is observed in the high differences between permethrin and 3PBA in the top panel, as well as in the larger dots depicted in the lower panel.}\label{fig:fig5}
+\centering
+\begin{adjustwidth}{-2cm}{}
+\centering
+\includegraphics[width=1\linewidth,]{figures/fig5_variability} 
+\hfill
+\end{adjustwidth}
+\caption{Variability in exposure estimates across age groups. 
+Variability in exposure is shown using P95/P50 ratios for 3PBA and permethrin across age groups. 
+Greater variability is observed in the high differences between permethrin and 3PBA in the top panel, 
+as well as in the larger dots depicted in the lower panel.}\label{fig:fig5}
 \end{figure}
 
 Our study also investigated the exposure trend based on the 3PBA
@@ -792,7 +800,7 @@ investigation across all cohorts. According to the urine 3PBA data,
 there was an increasing exposure trend from 1999 to 2016. Compared to
 earlier surveys, the geometric mean of urine 3PBA was about two-fold
 higher in the 2015-2016 investigation than in the 1999-2000 study. In our
-prediction, the PBK model showed an exposure trend with an intake rate
+prediction, the PBK model showedan exposure trend with an intake rate
 increment of less than an order of magnitude. However, unlike the PBK
 model, the high-throughput approach could not provide an exposure trend.
 Nonetheless, a common finding was that children under 6 years old had
@@ -803,7 +811,7 @@ could not be obtained by exploring only the urine 3PBA data.
 \centering
 \begin{adjustwidth}{-2cm}{}
 \centering
-\includegraphics[width=\linewidth]{figures/fig6}
+\includegraphics[width=\linewidth]{figures/fig6_trend}
 \hfill
 \end{adjustwidth}
 \caption{Trends in urinary 3PBA (top) and derived permethrin daily intake (bottom) from 1999
@@ -823,7 +831,7 @@ File S1.
 \centering
 \begin{adjustwidth}{-2cm}{}
 \centering
-\includegraphics[width=\linewidth]{figures/fig7}
+\includegraphics[width=\linewidth]{figures/fig7_cluster}
 \hfill
 \end{adjustwidth}
 \caption{Exposure similarity across age groups. Age groups are arranged by
@@ -837,7 +845,7 @@ exposure to deltamethrin occurred in the 6-11 age group during the 2009-2010
 NHANES cycle. For permethrin and cyfluthrin, the highest exposure levels were
 observed in children under 6 years old during the 2015-2016 cycle. To establish
 a conservative protective strategy, exposure values from the top 1\% of each
-group were used to calculate the MOE and the systematic exposure-derived MOIE.
+group were used to calculate the MOE and the systemic exposure-derived MOIE.
 Bayesian inference estimates showed that the geometric mean population oral
 intake rates for deltamethrin, permethrin, and cyfluthrin were \(3.83 \times
 10^{-5}\) mg/kg-day (GSD = 1.09), \(2.25 \times 10^{-3}\) mg/kg-day (GSD =
@@ -883,46 +891,44 @@ external exposure assessments tend to overestimate risk compared to
 advanced internal dose-based techniques.
 
 \begin{figure}[H]
-\includegraphics[width=1\linewidth,]{figures/fig8} \caption{Distribution of the MOE and MOIE for acute neurotoxic effects calculated from daily oral and corresponding systematic exposure, respectively. Higher values indicate a lower exposure risk.}\label{fig:fig8}
+\includegraphics[width=1\linewidth,]{figures/fig8} \caption{Distribution of the MOE and MOIE for acute neurotoxic effects calculated from daily oral and corresponding systemic exposure, respectively. Higher values indicate a lower exposure risk.}\label{fig:fig8}
 \end{figure}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Discussion}
 
-In this study, we successfully refined a PBK model to reconstruct
+In this study, a PBK model was successfully refined to reconstruct
 exposure patterns from publicly available biomonitoring data on
 pyrethroid metabolites within the U.S. population. This methodology
 aligns with the previous approaches used for methylmercury and
 chloroform, where the focus was on a single model without comparative
 exposure assessments, potentially compromising reliability
-\citep{allen2007use, lyons2008computational}. Our study rectifies this
+\citep{allen2007use, lyons2008computational}. This study rectifies this
 by benchmarking PBK model predictions against other exposure prediction
 tools, thus reinforcing the PBK model's robustness and applicability in
 exposure assessment.
 
-It is noteworthy that we reused human TK data from earlier model
-development, which is critical for robust predictions in our model
-verification. While we did not introduce major structural changes to the
-existing model, we validated its performance with the same TK data to
-ensure model reliability. Our refined PBK model demonstrated similar
-predictability to the global pyrethroid model by
+It is noteworthy that human TK data were reused from earlier model development,
+which is critical for robust predictions in model verification. While major
+structural changes where not introduced to the existing model, it performance
+was validated with the same TK data to ensure model reliability. The refined
+PBK model demonstrated similar predictability to the global pyrethroid model by
 \citet{quindroit2021estimating}, with approximately 65\% and 75\% of
-predictions falling within 2-fold and 3-fold error intervals,
-respectively. The model developed by \citet{quindroit2021estimating}
-applied only to simulate the pyrethroids concentration for adult group,
-our refined model aims to apply the exposure prediction to different age
-groups, including children.
+predictions falling within 2-fold and 3-fold error intervals, respectively. The
+model developed by \citet{quindroit2021estimating} applied only to simulate the
+pyrethroids concentration for adult group. This model aims to apply the
+exposure prediction to different age groups, including children.
 
 This study primarily compares daily intake estimates with the
-high-throughput modeling approach, utilizing NHANES biomonitoring data
+high-throughput modeling approach utilizing NHANES biomonitoring data
 for exposure estimation. Bayesian inference was applied to quantify
 uncertainty in both methods. Previous studies excluded outliers to
 avoid acute exposure under atypical conditions
-\citep{bao2020association}, whereas our study included all observations,
+\citep{bao2020association}, whereas this study included all observations,
 providing a comprehensive depiction of exposure. The Bayesian
 probabilistic approach's flexibility was instrumental in achieving this
 goal. The Bayesian method also has the capability to include the data
-that is below the LOD to provide proper inference.
+that is below the LOD in order to provide proper inference.
 
 Generally, the PBK model tends to estimate higher exposure levels than the
 high-throughput approach due to the inclusion of chemical-specific
@@ -967,60 +973,60 @@ chronic dog oral intake study (1 mg/kg/day) and Wolansky et al.
 among the lowest available. Therefore, a POD of approximately 1 mg/kg should be
 protective of both acute and long-term effects. It is crucial to note that the
 BMDLs used in the current study are higher than the lower confidence limit of
-threshold dose estimated in \citep{wolansky_relative_2006}, where benchmark
+threshold dose estimated by \citep{wolansky_relative_2006}, where benchmark
 response was a 30\% reduction in motor activity versus one standard deviation
-of the control value selected by the U.S.EPA. However, the Bayesian statistical
-approach has been proof to have higher capability in determining regulation
+of the control value selected by U.S.EPA. However, the Bayesian statistical
+approach has been proven to have higher capability in determining regulation
 than the traditional frequentist method for estimating robust BMD in risk
-analysis and further regulation \citep{desai_role_2024}.
+analysis \citep{desai_role_2024}.
 
 This study specifically focused on acute exposure risks. Due to the short
 half-life of pyrethroids, predicting exposure based on a steady-state
 assumption introduces significant uncertainty. Previous research has indicated
-that children's exposures are more likely to be episodic rather than fostering
-a steady-state condition \citep{kissel_comparison_2005}. As noted earlier, risk
-estimates derived from reverse dosimetry-based exposure and associated
+that children's exposures are more likely to be episodic rather than resulting
+in a steady-state condition \citep{kissel_comparison_2005}. As noted earlier,
+risk estimates derived from reverse dosimetry-based exposure and associated
 endpoints are generally sufficient to address risks from repeated exposures.
 However, they are less suitable for reconstructing source-specific exposure
-patterns over short and long terms. Specifically, based on the risk assessment
-conducted by the U.S. EPA \citep{us2017cyfluthrin, us2017deltamethrin,
+patterns over short and long durations. Specifically, based on the risk
+assessment conducted by U.S. EPA \citep{us2017cyfluthrin, us2017deltamethrin,
 us2017permethrin, us2011pyrethroid, us2018cypermethrin}, there appears to be no
 increased toxicity from repeated or chronic exposure to pyrethroids. Therefore,
 the risk estimates derived from acute studies are adopted to protect against
 risks from repeated exposures. Compared to scenario-based approaches, such as
-the one conducted by the U.S. EPA \citep{us2011pyrethroid}, the reverse
-dosimetry approach employed in this work may not adequately assess health risks
-associated with pathway-specific exposures over the short and long terms. While
-the U.S. EPA's cumulative risk assessment identified no risks of concern for
+the one conducted by U.S. EPA \citep{us2011pyrethroid}, the reverse dosimetry
+approach employed in this work may not adequately assess health risks
+associated with pathway-specific exposures over the short and long durations. While 
+U.S. EPA's cumulative risk assessment identified no risks of concern for
 pyrethroid pesticides, the study was conducted over a decade ago. The POD
 values used were based on benchmark dose modeling of data from Functional
 Observational Battery study, which are substantially higher (up to an order of
 magnitude) than the BMD modeled values presented in studies based on reduced
-motor activity by \citet{wolansky_relative_2006, wolansky_marcelo_j_evidence_2009}. Given advancements in risk
-assessment methodologies and the availability of new toxicological data, there
-is a need for an updated cumulative risk assessment to ensure that current
-exposure scenarios and potential risks are adequately characterized.
+motor activity by \citet{wolansky_relative_2006,
+wolansky_marcelo_j_evidence_2009}. Given advancements in risk assessment
+methodologies and the availability of new toxicological data, there is a need
+for an updated cumulative risk assessment to ensure that current exposure
+scenarios and potential risks are adequately characterized.
 
 In a risk assessment based on data from the Canadian Health Measures
 Survey and using neurotoxic effects as the endpoint,
 \citet{faure_evaluation_2020} reported that the hazard quotient of 3PBA
-exceeded 1. However, while 3PBA is a metabolite of several pyrethroids
+exceeded 1. While 3PBA is a metabolite of several pyrethroids
 with varying toxicities, the metabolite itself is considered less toxic.
 As a result, reverse dosimetry is required to investigate the parent
-compounds present in target tissues. Our research showed that in a
+compounds present in target tissues. This research showed that in a
 similar geographical context, all estimated MOEs for the U.S. population
 exceeded \(1.0 \times 10^{4}\), contrasting with the findings of the
 Canadian study and indicating that pyrethroid exposure among the general
 U.S. population is at an acceptable level.
 
 Unlike most studies that conduct health risk assessments using urinary
-concentrations or intake dose rates, our study utilized a
-physiologically based kinetic (PBK) model to assess risk based on dose
-metrics in the brain and plasma, which are directly associated with
-neurotoxic health effects. Our study approach is similar to a study by
-\citet{arnot_developing_2022}, who applied the internal threshold of
-toxicological concern to compare the no observed effect level (NOEL)
-from oral intake and whole-body exposure.
+concentrations or intake dose rates, this study applied a PBK model to assess
+risk based on dose metrics in the brain and plasma, which are directly
+associated with neurotoxic health effects. This study approach is similar to a
+study by \citet{arnot_developing_2022}, who applied the internal threshold of
+toxicological concern to compare the no observed effect level from oral intake
+and whole-body exposure.
 
 There are certain limitations in the PBK dose reconstruction. In the
 refined PBK model, the parameters were based on earlier studies without
@@ -1067,29 +1073,29 @@ Regarding the data availability, the newly accessible biomonitoring
 data from NHANES used in the current study lags by nearly a decade. This
 delay in data availability limits its ability to reflect recent exposure
 trends in a timely manner. Consequently, alternative data sources, such
-as pesticide use reports (e.g., PUR data from the California DPR) and
+as pesticide use reports (e.g., PUR data from DPR) and
 regional investigations, can serve as valuable tools for understanding
 and predicting exposure trends.
 
-Based on our results, the current study highlights three key findings: 1) Both 
+Based on results, the current study highlights three key findings: 1) Both 
 PBK and high-throughput models consistently identify children
 as the population with the highest pyrethroid exposure, aligning with prior
-studies that support this finding (e.g., \citep{barr2010urinary}). 2)The
+studies that support this finding (e.g., \citep{barr2010urinary}). 2) The
 exposure trend reconstructed by the PBK model closely aligns with biomonitoring
 data, as shown in Figure \ref{fig:fig6}. In contrast, the high-throughput model struggles to
 capture exposure trends, likely due to its simplified structure and the omission of
-chemical- and physiological-specific parameters. \citep{stanfield2022bayesian}, key
+chemical- and physiological-specific parameters. \citet{stanfield2022bayesian}, key
 developers of the high-throughput approach, noted that missing data for over
 half of the metabolites increases uncertainty and complicates exposure
 prediction. 3) Compared to the high-throughput approach, the PBK model offers more
-detailes insights by integrating systematic exposure data, providing more
+details insights by integrating systemic exposure data, providing more
 robust information for exposure assessment.
 
 This study refined the pyrethroid PBK model and identified potential
 future applications. For example, it is preferable to use a PBK model to
 derive relative potency factors based on internal dosimetry.
 \citet{quindroit2021estimating} and \citet{thepaut_pbpk_2024} applied
-the PBK model in cumulative risk assessment, though their study was
+the PBK model in cumulative risk assessment, though their studies were
 based on intake dose rate rather than internal dose in target organs
 related to toxicity endpoints. The updated model was used to estimate
 and update the Tier 1 provisional biomonitoring equivalent in
@@ -1102,7 +1108,7 @@ The primary objective of this study is to leverage advanced computational
 approaches, integrated with biomonitoring data, to evaluate human health risks
 associated with pyrethroid exposure. This methodology can enhance the clarity
 and accuracy of exposure assessments. While the findings suggest that current
-exposure levels fall within acceptable thresholds based on existing risk
+pyrethrois exposure levels fall within acceptable thresholds based on existing risk
 assessment frameworks, a detailed exploration of regulatory implications, such
 as reassessing exposure limits or refining risk assessment methodologies,
 extends beyond the scope of this research. Such considerations would require
@@ -1114,8 +1120,7 @@ estimates and identifying critical exposure trends. This study
 underscores the model's potential for broader applications in health
 risk assessments and highlights the need for ongoing research and
 regulatory updates to safeguard public health. By continuously improving
-exposure models and integrating comprehensive biomonitoring data, we can
-better protect vulnerable populations from potential health risks
+exposure models and integrating comprehensive biomonitoring data, vulnerable populations can be better protected from potential health risks
 associated with pyrethroid insecticides.
 
 
@@ -1224,7 +1229,6 @@ LOD & Limit of Detection \\
 MOE & Margin of Exposure \\
 MOIE & Margin of Internal Exposure \\
 NHANES & National Health and Nutrition Examination Survey \\
-NOEL & No-Observed-Effect Level \\
 NOAEL & No-Observed-Adverse-Effect Level \\
 PAD & Population-Adjusted Dose \\
 PBK & Physiologically Based Kinetic \\
