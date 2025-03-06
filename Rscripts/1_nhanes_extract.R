@@ -5,6 +5,7 @@ library(readxl) # read_excel
 library(foreign) # read.xport
 library(survey) # svydesign
 
+## Function to download NHANES data
 get_NHANES_data <- function(codes_file = NULL, cohort = NULL, save_directory = NULL) {
   if (is.null(codes_file)){
     print("Error: please provide a file name")
@@ -50,7 +51,6 @@ get_NHANES_data <- function(codes_file = NULL, cohort = NULL, save_directory = N
   ### ??? debug to solve the issue for 99-00, 01-02, 03-04 data
   for (i in 1:length(result)) 
     result[[i]] <- result[[i]][complete.cases(result[[i]])]
-  ### ???
   ### Download the needed files from the NHANES website and save in the correct directory
   print("Starting Downlodas")
   oldw <- getOption("warn")
@@ -111,22 +111,24 @@ get_NHANES_data <- function(codes_file = NULL, cohort = NULL, save_directory = N
   options(warn = oldw)
 }
 
-
+# Wrapper function to fetch data for a specific cohort
 get_data <- function(cohort = "99-00"){
   get_NHANES_data(codes_file = "data/NHANEScodes_file.xlsx",
                   cohort = cohort,
                   save_directory = "data")
 }
 
+# Define cohorts and years
 years <- c("1999", "2001", "2007", "2009", "2011", "2013", "2015")
 cohort <- c("99-00", "01-02", "07-08", "09-10", "11-12", "13-14", "15-16")
 
+# Download missing data
 for(i in seq(7)) {
   check_files <- list.files(paste0("data/nhanes/", years[i], "/"))
   if (length(check_files) == 0) get_data(cohort = cohort[i])
 }
 
-#
+# Load data
 codes_file <- "data/NHANEScodes_file.xlsx"
 NHANEScodes <- codes_file
 wtvars <- as.data.frame(read_excel(NHANEScodes, sheet = 2))
@@ -139,6 +141,7 @@ names(demofiles) <- names(datafiles) <-
   names(bwtfiles) <- names(creatfiles) <- 
   names(wtvar) <- wtvars$sample
 
+# Process each cohort
 for (j in seq(7)) {
   select_cohort <- cohort[j]
   locat <- paste0("data/nhanes/", years[j])
@@ -336,6 +339,7 @@ for (j in seq(7)) {
 #head(all_data)
 #dim(all_data) # total_n = 18665 
 
+# Save processed data
 nhanes_data <- all_data
 save(nhanes_data, file="nhanes_data.RData")
 file.exists("nhanes_data.RData")

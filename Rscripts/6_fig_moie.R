@@ -1,5 +1,8 @@
 library(RMCSim)
 library(dplyr)
+library(ggplot2)
+library(forcats)
+library(scales)
 
 # POD
 source("Rscripts/rat_pbk_sim/DLM_Oral_POD_90d.R")
@@ -178,10 +181,6 @@ tcp_df |> group_by(metrics) |>
   summarise(P50 = median(moe), P05=quantile(moe, .05))
 
 # Plot
-library(ggplot2)
-library(forcats)
-library(scales)
-
 metrics_level <- c("Oral dose", "Brain Cmax", "Brain AUC", "Plasma Cmax",
                    "Plasma AUC")
 compound_level <- c("Deltamethrin",

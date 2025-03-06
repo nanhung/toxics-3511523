@@ -1,45 +1,45 @@
-library(readxl)    # read_excel
-library(foreign)   # read.xport
-library(survey)    # svydesign
-library(magrittr)  # %<>%
-library(dplyr)     # mutate
-library(RMCSim)
-library(foreach)
-library(doParallel)
+# Load required libraries
+library(readxl)     # read_excel
+library(foreign)    # read.xport
+library(survey)     # svydesign
+library(magrittr)   # %<>%
+library(dplyr)      # mutate
+library(RMCSim)     # Monte Carlo simulations
+library(foreach)    # Parallel loops
+library(doParallel) # Parallel backend
 
+# Load preprocessed data
 load("data/Wtns.rda")
 load("data/Agens.rda")
 load("data/modparms.rda")
 
-
-
+# Read NHANES metadata
 codes_file <- "data/NHANEScodes_file.xlsx"
-NHANEScodes <- codes_file
-wtvars <- as.data.frame(read_excel(NHANEScodes, sheet = 2))
-demofiles <- wtvars$demofile
-datafiles <- wtvars$file
-bwtfiles <- wtvars$BWfile
-creatfiles <- wtvars$creatfile
-wtvar <- wtvars$wtvariable
+wtvars <- read_excel(codes_file, sheet = 2) |> as.data.frame()
+demofiles <- setNames(wtvars$demofile, wtvars$sample)
+datafiles <- setNames(wtvars$file, wtvars$sample)
+bwtfiles <- setNames(wtvars$BWfile, wtvars$sample)
+creatfiles <- setNames(wtvars$creatfile, wtvars$sample)
+wtvar <- setNames(wtvars$wtvariable, wtvars$sample)
 
-names(demofiles) <- names(datafiles) <-
-  names(bwtfiles) <- names(creatfiles) <- 
-  names(wtvar) <- wtvars$sample
+# Define cohorts and corresponding years
+cohort <- c("99-00", "01-02", "07-08", "09-10", "11-12", "13-14", "15-16")
+years <- c("1999", "2001", "2007", "2009", "2011", "2013", "2015")
+
+# Copy executable for simulations
+file.copy("MCSim/mcsim.gPYR_analytic_ss.model.exe", "mcsim.gPYR_analytic_ss.model.exe", overwrite = TRUE)
 
 ## Remove output folder or files ######
 #system("rm -rf outputs")
 #system("rm outputs/*.out")
 #######################################
 
-cohort <- c("99-00", "01-02", "07-08", "09-10", "11-12", "13-14", "15-16")
-years <- c("1999", "2001", "2007", "2009", "2011", "2013", "2015")
-
-file.copy("MCSim/mcsim.gPYR_analytic_ss.model.exe", "mcsim.gPYR_analytic_ss.model.exe")
-
-for (j in 1:4){
+for (j in 1:7){
   
   select_cohort <- cohort[j]
   locat <- paste0("data/nhanes/", years[j])
+  
+  # File paths
   demo_locat <- paste0(
     locat, "/", unique(demofiles[which(names(demofiles) == cohort[j])])
   )
@@ -53,15 +53,20 @@ for (j in 1:4){
   )
   creat_locat <- paste0(
     locat, "/", unique(creatfiles[which(names(creatfiles) == cohort[j])]))
+  
+  # Read data
   demo <- read.xport(demo_locat)
   cdta <- read.xport(data_locat)
   bwt <- read.xport(bwt_locat)
   creat <- read.xport(creat_locat)
+  
+  # Define weight variable
   wtvariable  <- c(
     "WTSPP2YR", "WTSPP2YR", "WTSC2YR", "WTSC2YR",
     "WTSC2YR", "WTSC2YR", "WTSB2YR")
   chem2yrwt <- wtvariable[j]
   
+  # Select chemical variables based on availability
   met <- c("URX4FP", "URXOPM", "URXTCC", "URXCB3", "URXCCC")
   if (all(met %in% names(cdta) == TRUE)) {
     chemvars <- c("URX4FP", "URXCB3", "URXCCC", "URXOPM", "URXTCC")
@@ -75,6 +80,7 @@ for (j in 1:4){
   }
   
   ## -----------------------------------------------------------------
+  ## Demographics processing
   
   seq <- "SEQN"
   PSU <- "SDMVPSU" # the sampling unit
@@ -84,22 +90,7 @@ for (j in 1:4){
   demoeth <- "RIDRETH1"
   MECwt <- "WTMEC2YR"
   bodywtcomment <- "BMIWT"
-  
-  ## -----------------------------------------------------------------
-  ##   Demographics
-  
-  ## Interesting demographic variables are:
-  ## demoageyr: age in years
-  ## demogendr: gender: male=1, female=2
-  ## demoeth: Race/Ethnicity:
-  ##        Mexican American=1
-  ##        Other Hispanic=2
-  ##        Non-Hispanic White=3
-  ##        Non-Hispanic Black=4
-  ##        Other Race-Including Multi-Racial=5
-  
-  ## Select out the variables we'll need going forward
-  
+    
   demo <- demo[,c(seq,PSU,STRA,demoageyr,demogendr,demoeth,MECwt)]
   ## Set up gender, age, and ethnicity as factors 
   # using the same levels as the NHANES reports
@@ -124,18 +115,7 @@ for (j in 1:4){
   )
   
   ## -----------------------------------------------------------------
-  ## Chemical Data
-  
-  
-  ## We keep from cdta seq, chem2yrwt, all the chemvars, and the
-  ## comment variables for the chemvars, if they exist.  Not all
-  ## chemvars have comment variables, so they need to be constructed.
-  ## create the lodindicator variable names for all chemvars, then,
-  ## construct the ones that don't exist.  We can identify missing
-  ## values because they are the smallest variable in the variable,
-  ## will probably have multiple instances, and will be approximately
-  ## the second smallest in the variable / sqrt(2) (rounded to 2
-  ## significant digits).
+  ## Chemical data processing  
   
   measurehead="URX"
   measuretail=NULL
@@ -176,6 +156,8 @@ for (j in 1:4){
   #codes_file <- "data/NHANEScodes_file.xlsx"
   creatinine <- "URXUCR"
   
+  ## -----------------------------------------------------------------
+  ## Merge datasets
   alldata <- merge(demo, cdta[,c(seq, chem2yrwt, chemvars, LODnames)],
                    by.x=seq, by.y=seq, all.y=TRUE)
   
@@ -186,8 +168,6 @@ for (j in 1:4){
   bodywt <- "BMXWT"
   bodymassindex <- "BMXBMI"
   
-  #alldata <- merge(demo, cdta[,c(seq, chem2yrwt, chemvars, LODnames, creatinine)],
-  #                 by.x=seq, by.y=seq, all.y=TRUE)
   
   bwt[!is.na(bwt[,bodywtcomment]),bodywt] <- NA
   ## Create obesity factor from bodymassindex
@@ -196,6 +176,8 @@ for (j in 1:4){
   alldata <- merge(alldata, bwt[,c(seq, bodywt, bodymassindex, "Obesity")],
                    by.x=seq, by.y=seq, all.x=TRUE)
   
+  ## -----------------------------------------------------------------
+  ## Handle missing body weight
   if (any(is.na(alldata[,bodywt]))) {
     ##writeLines(paste(sum(is.na(alldata[,bodywt])),"missing values in",bodywt))
     ##browser()
@@ -229,6 +211,8 @@ for (j in 1:4){
     }
   }
   
+  ## -----------------------------------------------------------------
+  # Calculate daily creatinine
   CreatFun <- function(newdata){
     X <- cbind(model.matrix(~ 0 + RIAGENDR + RIDRETH1, data=newdata),
                predict(Wtns, newdata$BMXWT),
@@ -250,7 +234,8 @@ for (j in 1:4){
   if (length(which(is.na(alldata$BMXWT))) > 0) 
     alldata <- alldata[-which(is.na(alldata$BMXWT)), ]
   
-  #!!! substituted the non-detects with NHANES value(DL/√2) may cause bias !!!#
+  ## -----------------------------------------------------------------
+  # Handle non-detects
   LD_URX4FP <- min(alldata$URX4FP, na.rm = T)
   LD_URXTCC <- min(alldata$URXTCC, na.rm = T)
   LD_URXOPM <- min(alldata$URXOPM, na.rm = T)
@@ -326,7 +311,8 @@ for (j in 1:4){
   #  alldata$URXCCC <- -1
   #}
 
-
+  ## -----------------------------------------------------------------
+  # Define groups for analysis
   total_groups <- length(unique(alldata$AgeGroup)) + 1
 
   gps <- c("Total", 

@@ -3,6 +3,7 @@ library(rstan) # monitor
 library(data.table) # fread
 library(dplyr) # select
 
+# Define constants
 cohort <- c("99-00", "01-02", "07-08", "09-10", "11-12", "13-14", "15-16")
 seeds <- c("6734", "4880", "5916")
 pop <- c("Total", 
@@ -12,14 +13,15 @@ pop <- c("Total",
   "over 65 years", 
   "0 - 5 years")
 
-# Create report
+# Initialize report
 opt <- "MCSim/report_mcmc.log"
 cat("", file = opt) 
 sink(opt, append=TRUE)  
 cat(paste0("Starting time: ", Sys.time()), "\n\n")
 sink()
 
-for (j in seq(1)) {
+# Process cohort
+for (j in seq(7)) {
   #
   sink(opt, append=TRUE)  
   cat("\n", paste(cohort[j], "\n", "====================================\n"))
@@ -88,41 +90,39 @@ for (j in seq(1)) {
   #
 }
 
-setwd("..")
-cohort <- c("99-00", "01-02", "07-08", "09-10", "11-12", "13-14", "15-16")
-
-if(j %in% c(1,2)){
-   out <- paste0("outputs/gPYR_analytic_5met_", cohort[j], "_Total_5916.out")
-} else if (j %in% c(3:4)){
-  out <- paste0("outputs/gPYR_analytic_4met_", cohort[j], "_Total_5916.out")
-} else if (j %in% c(5:7)){
-  out <- paste0("outputs/gPYR_analytic_3met_", cohort[j], "_Total_5916.out")
+for (j in seq(7)) {
+  
+  if(j %in% c(1,2)){
+     out <- paste0("outputs/gPYR_analytic_5met_", cohort[j], "_Total_5916.out")
+  } else if (j %in% c(3:4)){
+    out <- paste0("outputs/gPYR_analytic_4met_", cohort[j], "_Total_5916.out")
+  } else if (j %in% c(5:7)){
+    out <- paste0("outputs/gPYR_analytic_3met_", cohort[j], "_Total_5916.out")
+  } 
+  
+  # Read last line from each chain
+  X <- list()
+  for(i in 1:3){
+    setnames(
+      X[[i]] <- fread(cmd=paste0("tail -1 '", out[i], "'")),
+      names(fread(out[1], nrows = 0))
+    )
+  } 
+  # Run final MCMC check
+  MCMCfinal <- do.call(rbind, list(X[[3]], X[[2]], X[[1]]))
+  MCMCfinal |> tail(1) |> write.table(file="MCMC.check.dat", row.names=F, sep="\t")  
+  model <- "gPYR_analytic_ss.model"
+  if(j %in% c(1:2)){
+    input <- paste0("gPYR_analytic_5met_check_", cohort[j], "_Total", ".mcmc.in")
+  } else if (j %in% c(3:4)){
+    input <- paste0("gPYR_analytic_4met_check_", cohort[j], "_Total", ".mcmc.in")
+  } else if (j %in% c(5:7)){
+    input <- paste0("gPYR_analytic_3met_check_", cohort[j], "_Total", ".mcmc.in")
+  }
+  input 
+  RMCSim::mcsim(model = model, input = input, dir = "MCSim")
+  newname <- paste0("mcmc.check_", cohort[j])
+  file.rename("mcmc.check.out", newname)
 }
 
-
-
-X <- list()
-for(i in 1:3){
-  setnames(
-    X[[i]] <- fread(cmd=paste0("tail -1 '", out[i], "'")),
-    names(fread(out[1], nrows = 0))
-  )
-}
-
-MCMCfinal <- do.call(rbind, list(X[[3]], X[[2]], X[[1]]))
-MCMCfinal |> tail(1) |> write.table(file="MCMC.check.dat", row.names=F, sep="\t")  
-model <- "gPYR_analytic_ss.model"
-if(j %in% c(1:2)){
-  input <- paste0("gPYR_analytic_5met_check_", cohort[j], "_Total", ".mcmc.in")
-} else if (j %in% c(3:4)){
-  input <- paste0("gPYR_analytic_4met_check_", cohort[j], "_Total", ".mcmc.in")
-} else if (j %in% c(5:7)){
-  input <- paste0("gPYR_analytic_3met_check_", cohort[j], "_Total", ".mcmc.in")
-}
-input
-
-RMCSim::mcsim(model = model, input = input, dir = "MCSim")
-
-newname <- paste0("mcmc.check_", cohort[j])
-file.rename("mcmc.check.out", newname)
 

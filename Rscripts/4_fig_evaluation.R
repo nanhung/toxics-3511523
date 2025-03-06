@@ -1,7 +1,8 @@
-library(dplyr)
-library(ggplot2)
-library(scales)
+library(dplyr)      # Data manipulation
+library(ggplot2)    # Plotting
+library(scales)     # Scale transformations
 
+# Define file paths and cohorts
 to_read <- c(
   "MCSim/saves/MCMC.check_9900.out",
   "MCSim/saves/MCMC.check_0102.out",
@@ -18,7 +19,7 @@ for (i in seq(7)){
   if (i == 1) X <- x else X <- rbind(X, x)
 }
 
-#
+# Read and combine data
 df <- X |> 
   mutate(Var = ifelse(Output_Var == "CUri3PBA", "3PBA", 
     ifelse(Output_Var == "CUriFPBA", "FPBA", 
@@ -30,6 +31,7 @@ df$Var <- factor(df$Var, level = c("FPBA", "3PBA", "trans-DCCA",
     "cis-DCCA", "DBCA", "<LOD"))
 df$cohort <- factor(df$cohort, level = cohort)
 
+# Define custom theme
 set_theme <- theme(
   legend.position  = c(0.5, 0.1),
   axis.text        = element_text(color = "black", size = 13),
@@ -46,28 +48,25 @@ set_theme <- theme(
   panel.background = element_blank()
 )
 
+# Create plot
 p1 <- ggplot(data = df, aes(x=Data, y=Prediction, color = Var, shape = Var)) + 
   geom_point(alpha=0.5, size=1) + 
-  scale_x_log10(#limits=c(0.1,1000),
+  scale_x_log10(
     breaks = trans_breaks("log10", function(x) 10^x, n = 4),
     labels = trans_format("log10", scales::math_format(10^.x))) +
-  scale_y_log10(#limits=c(0.1,1000),
+  scale_y_log10(
     breaks = trans_breaks("log10", function(x) 10^x, n = 4),
     labels = trans_format("log10", scales::math_format(10^.x))) +
   scale_colour_viridis_d(end = 0.95 ) +
   geom_abline(slope = 1) + 
-  xlab("NHANES biomonitoring data (ug/L)") +
-  ylab("PBK prediction (ug/L)") +
-  facet_wrap(~cohort) +
-  #geom_smooth(method='lm', se=F) +
+   facet_wrap(~cohort) +
   geom_abline(slope = 1, intercept = 0.477, linetype = "dashed", color = "grey") +
   geom_abline(slope = 1, intercept = -0.477, linetype = "dashed", color = "grey") +
-  #ggtitle("Comparison of PBPK model prediction and NHANES biomonitoring data") +
   theme_bw() +
-  set_theme +
-  xlab("NHANES biomonitoring data (ug/L)") +
-  ylab("PBK prediction (ug/L)")
+  xlab("NHANES biomonitoring data (µg/L)") +
+  ylab("PBK prediction (µg/L)") +
+  set_theme
 
-png("fig3_goodness.png", width = 2100, height = 1800, res = 300)
-p1
-dev.off()
+# Save plot
+ggsave("fig3_goodness.png", p1, width = 7, height = 6, dpi = 300, units = "in")
+
