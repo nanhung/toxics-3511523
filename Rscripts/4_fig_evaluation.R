@@ -48,6 +48,8 @@ set_theme <- theme(
   panel.background = element_blank()
 )
 
+df$cohort <- gsub("-", "\u2013", df$cohort)  # Replace Unicode minus with hyphen
+
 # Create plot
 p1 <- ggplot(data = df, aes(x=Data, y=Prediction, color = Var, shape = Var)) + 
   geom_point(alpha=0.5, size=1) + 
@@ -59,7 +61,7 @@ p1 <- ggplot(data = df, aes(x=Data, y=Prediction, color = Var, shape = Var)) +
     labels = trans_format("log10", scales::math_format(10^.x))) +
   scale_colour_viridis_d(end = 0.95 ) +
   geom_abline(slope = 1) + 
-   facet_wrap(~cohort) +
+   facet_wrap(~cohort, labeller = labeller(group = function(x) gsub("-", "+", x))) +
   geom_abline(slope = 1, intercept = 0.477, linetype = "dashed", color = "grey") +
   geom_abline(slope = 1, intercept = -0.477, linetype = "dashed", color = "grey") +
   theme_bw() +

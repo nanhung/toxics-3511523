@@ -113,6 +113,7 @@ for (cohort in all_cohorts_data){
                            "Cypermethrin", "High-throughput", cohort, age) |>
       `colnames<-`(c("Prediction", "Compound", "Approach", "Cohort", "Age"))
     app2_cyf <- data.frame(c(exp(lPsampsPBK[,"lnCYF_IngDose(1)"])),
+  mutate(across(Cohort, as.factor)) |>
                            "Cyfluthrin", "PBK", cohort, age) |>
       `colnames<-`(c("Prediction", "Compound", "Approach", "Cohort", "Age"))
     app2_prm <- data.frame(c(exp(lPsampsPBK[,"lnPRM_IngDose(1)"])),
@@ -172,8 +173,13 @@ for (cohort in all_cohorts_data){
 }
 
 X$Cohort <- factor(X$Cohort, level = all_cohorts_data)
-X$Age <- factor(X$Age, level = c("< 6", "6 - 11", "12 - 19", "20 - 65", "> 65"))
 X$Approach <- factor(X$Approach, level = c("PBK", "High-throughput"))
+X$Age <- gsub("-", "\u2013", X$Age)  # Replace Unicode minus with hyphen
+X$Cohort <- gsub("-", "\u2013", X$Cohort) 
+X$Age <- factor(X$Age, level = c("< 6", "6 \u2013 11", "12 \u2013 19", "20 \u2013 65", "> 65"))
+X$Cohort <- factor(X$Cohort, level = c("99\u201300", "01\u201302", "07\u201308", "09\u201310",
+    "11\u201312", "13\u201314", "15\u201316"))
+
 
 X.PBK <- X |> filter(Approach == 'PBK') |> group_by(Compound, Age, Cohort) |>
   summarise(PBK_median = median(Prediction),
@@ -272,11 +278,17 @@ x_diff$Age <- factor(x_diff$Age,
   level = c("< 6", "6 - 11", "12 - 19", "20 - 65", "> 65"))
 x_diff$Cohort <- factor(x_diff$Cohort, 
   level = c("99-00", "01-02", "07-08", "09-10", "11-12", "13-14", "15-16"))
+
 x_pbk_join <- full_join(x_pbk_var, x_pbk_ratio,
   by = c("Compound", "Cohort", "Age")) 
 x <- x_pbk_join |> filter(Compound == "Permethrin") |>
   rbind(nhanes_data_opm[,c(6,8,7,4,5)])
 x_diff |> print(n=28)
+
+x_diff$Age <- gsub("-", "\u2013", x_diff$Age)
+x_diff$Cohort <- gsub("-", "\u2013", x_diff$Cohort) 
+x$Age <- gsub("-", "\u2013", x$Age)
+x$Cohort <- gsub("-", "\u2013", x$Cohort) 
 
 p1 <- x_diff |> 
   ggplot(aes(x=Cohort, y=Age, size=diff)) + geom_point() +
@@ -293,7 +305,7 @@ p1 <- x_diff |>
   )
 p2 <- x |> unite(Cohort_Age, c("Cohort", "Age"), remove=F) |>
   mutate(across(Age, as.factor)) |>
-  mutate(Age=fct_relevel(Age, levels(X$Age))) |> 
+  mutate(Age=fct_relevel(Age, levels(c("6 \u2013 11", "12 \u2013 19", "20 \u2013 65", "> 65")))) |> 
   ggplot(aes(x=ratio, y=Compound, group=Cohort_Age, color=Age)) + 
   geom_line(color=1, linetype=2, linewidth=0.1) +
   geom_point() + 
@@ -327,7 +339,7 @@ x_bayesmarker_prm <- X |>
             upr = quantile(Prediction, 0.975),
             lor = quantile(Prediction, 0.025))
 
-p2 <- rbind(x_bayesmarker_prm, x_pbk_prm) |> 
+p4 <- rbind(x_bayesmarker_prm, x_pbk_prm) |> 
     ggplot(aes(x = Cohort, y = med, group=Approach, color = Approach)) +
     geom_point(size = 3) +
     geom_line() +
@@ -352,15 +364,19 @@ p2 <- rbind(x_bayesmarker_prm, x_pbk_prm) |>
 
 
 nhanes_data$AgeGroup <- as.character(nhanes_data$AgeGroup)
-p1 <- nhanes_data |>
+p3 <- nhanes_data |>
   select(AgeGroup, year, URXOPM) |> melt() |> 
   group_by(year, AgeGroup) |> 
   summarise(gm = geoMean(value, na.rm=T)) |>
-  add_column(Cohort = c(rep("99-00", 3),
-      rep(c("01-02", "07-08", "09-10", "11-12", "13-14"), each=4),
-      rep("15-16", 5))) |>
+  add_column(Cohort = c(rep("99\u201300", 3),
+      rep(c("01\u201302", "07\u201308", "09\u201310", "11\u201312", "13\u201314"), each=4),
+      rep("15\u201316", 5))) |>
   mutate(AgeGroup = replace(AgeGroup, AgeGroup == "Over 65", "> 65")) |>
   mutate(AgeGroup = replace(AgeGroup, AgeGroup == "0 - 5", "< 6")) |>
+  mutate(AgeGroup = ifelse(AgeGroup == "6 - 11", "6 \u2013 11", 
+      ifelse(AgeGroup == "12 - 19", "12 \u2013 19", 
+        ifelse(AgeGroup == "20 - 65", "20 \u2013 65", AgeGroup)))) |>
+  mutate(AgeGroup=fct_relevel(AgeGroup, c("< 6", "6 \u2013 11", "12 \u2013 19", "20 \u2013 65", "> 65"))) |> 
   mutate(across(AgeGroup, as.factor)) |>
   mutate(AgeGroup=fct_relevel(AgeGroup, levels(X$Age))) |> 
   mutate(across(Cohort, as.factor)) |>
@@ -381,7 +397,7 @@ p1 <- nhanes_data |>
     axis.text.x=element_text(size=12, angle = 45))
 
 png("fig6_trend.png", width = 3000, height = 1500, res = 230)
-plot_grid(p1, p2, nrow = 2, rel_heights = c(1/3, 2/3))
+plot_grid(p3, p4, nrow = 2, rel_heights = c(1/3, 2/3))
 dev.off()
 
 #
@@ -422,7 +438,7 @@ set_labels_params <- function(nbLabels,
   } else {
     angle       <-  rep(0, nbLabels)
     hjust       <-  0
-    if (direction %in% c("tb", "bt")) { angle <- angle + 45 }
+    if (direction %in% c("tb", "bt")) { angle <- angle + 75 }
     if (direction %in% c("tb", "rl")) { hjust <- 1 }
   }
   list(angle = angle, hjust = hjust, vjust = 0.5)
@@ -432,8 +448,8 @@ plot_ggdendro <- function(hcdata,
                           direction   = c("lr", "rl", "tb", "bt"),
                           fan         = FALSE,
                           scale.color = NULL,
-                          branch.size = 1,
-                          label.size  = 4,
+                          branch.size = 0.8,
+                          label.size  = 3,
                           nudge.label = 0.01,
                           expand.y    = 0.1) {
   # 
@@ -483,10 +499,11 @@ plot_ggdendro <- function(hcdata,
                   colour  =  factor(clust)),
               #vjust       =  labelParams$vjust,
               #hjust       =  labelParams$hjust,
-              vjust = 2.5,
+              vjust = 1.0,
               hjust = 1.0,
               nudge_y     =  ymax * nudge.label,
               size        =  label.size,
+              fontface    = "bold",
               show.legend =  FALSE)
   # colors and limits
   if (!is.null(scale.color)) {
@@ -519,7 +536,9 @@ hc_a <- X |> filter(Approach == "PBK") |>
   acast(Age~CC, median) |> scale() |>  
   dist(method = "euclidean") |> hclust(method = "ward.D2")
 
-set_theme <- theme(plot.title = element_text(face='bold')) 
+set_theme <- theme(
+  plot.title = element_text(face='bold', size=10), 
+  plot.margin = unit(c(0.5, 0.5, 0.5, 0.5), "cm")) 
 
 p1 <- dendro_data_k(hca_cyf, 2) |>  
   plot_ggdendro(direction = "tb", expand.y = 0.2) +

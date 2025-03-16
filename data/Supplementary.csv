@@ -2,60 +2,60 @@ source,approach,compound,predictor,exposure,quantile,population,concentration,PA
 Aylward et al. 2018,Dietary Exposure Evaluation Model,Deltamethrin,Food consumption,Chronic,Upper,Total,0.0000019,0.0149,0.0128
 Aylward et al. 2018,Dietary Exposure Evaluation Model,Permethrin,Food consumption,Chronic,Upper,Total,0.0018,0.44,0.4091
 Aylward et al. 2018,Dietary Exposure Evaluation Model,Cypermethrin,Food consumption,Chronic,Upper,Total,0.00061,0.0716,0.852
-EPA 2023,Dietary Exposure Evaluation Model,Deltamethrin,Food consumption,Chronic,Median,1-2,0.000596,0.0149,4
-EPA 2023,Dietary Exposure Evaluation Model,Deltamethrin,Food consumption,Acute,Median,1-2,0.003588,0.0149,24.0805
-EPA 2023,Dietary Exposure Evaluation Model,Deltamethrin,Food consumption,Chronic,Median,6-12,0.000323,0.0149,2.1678
-EPA 2023,Dietary Exposure Evaluation Model,Deltamethrin,Food consumption,Acute,Median,6-12,0.002325,0.0149,15.604
-EPA,Dietary Exposure Evaluation Model,Cyfluthrin,Food consumption,Chronic,Median,6-12,0.000921,0.0117,7.8718
-EPA,Dietary Exposure Evaluation Model,Cyfluthrin,Food consumption,Acute,Median,6-12,0.00239,0.0117,20.4274
-EPA,Dietary Exposure Evaluation Model,Permethrin,Food consumption,Chronic,Median,6-12,0.00109,0.44,0.2477
-EPA,Dietary Exposure Evaluation Model,Permethrin,Food consumption,Acute,Median,6-12,0.0265,0.44,6.0227
-EPA,Dietary Exposure Evaluation Model,Cypermethrin,Food consumption,Chronic,Median,6-12,0.000294,0.0716,0.4106
-EPA,Dietary Exposure Evaluation Model,Cypermethrin,Food consumption,Acute,Median,6-12,0.01256,0.0716,17.5419
-EPA 2023,Dietary Exposure Evaluation Model,Deltamethrin,Food consumption,Chronic,Median,3-5,0.000544,0.0149,3.651
-EPA 2023,Dietary Exposure Evaluation Model,Deltamethrin,Food consumption,Acute,Median,3-5,0.0039,0.0149,26.1745
-EPA,Dietary Exposure Evaluation Model,Cyfluthrin,Food consumption,Chronic,Median,3-5,0.00157,0.0117,13.4188
-EPA,Dietary Exposure Evaluation Model,Cyfluthrin,Food consumption,Acute,Median,3-5,0.003227,0.0117,27.5812
-EPA,Dietary Exposure Evaluation Model,Permethrin,Food consumption,Chronic,Median,3-5,0.00222,0.44,0.5045
-EPA,Dietary Exposure Evaluation Model,Permethrin,Food consumption,Acute,Median,3-5,0.041856,0.44,9.5127
-EPA,Dietary Exposure Evaluation Model,Cypermethrin,Food consumption,Chronic,Median,3-5,0.000544,0.0716,0.7598
-EPA,Dietary Exposure Evaluation Model,Cypermethrin,Food consumption,Acute,Median,3-5,0.022196,0.0716,31
-Stanfield et al. 2022,High-throughput model,Deltamethrin,Biomonitoring,Chronic,Median,6-11,0.0000198,0.0149,0.1329
-Stanfield et al. 2022,High-throughput model,Deltamethrin,Biomonitoring,Chronic,Upper,6-11,0.0000438,0.0149,0.294
-Stanfield et al. 2022,High-throughput model,Cyfluthrin,Biomonitoring,Chronic,Median,6-11,0.000000937,0.0117,0.008
-Stanfield et al. 2022,High-throughput model,Cyfluthrin,Biomonitoring,Chronic,Upper,6-11,0.00000176,0.0117,0.015
-Stanfield et al. 2022,High-throughput model,Permethrin,Biomonitoring,Chronic,Median,6-11,0.00000149,0.44,0.0003
-Stanfield et al. 2022,High-throughput model,Permethrin,Biomonitoring,Chronic,Upper,6-11,0.0000219,0.44,0.005
-Stanfield et al. 2022,High-throughput model,Cypermethrin,Biomonitoring,Chronic,Median,6-11,0.00000154,0.0716,0.0022
-Stanfield et al. 2022,High-throughput model,Cypermethrin,Biomonitoring,Chronic,Upper,6-11,0.0000239,0.0716,0.0334
-This study,Physiologically based kinetic model,Deltamethrin,Biomonitoring,Acute,Median,6-11,0.0000551,0.0149,0.3698
-This study,Physiologically based kinetic model,Deltamethrin,Biomonitoring,Acute,Upper,6-11,0.0000634,0.0149,0.4255
-This study,Physiologically based kinetic model,Cyfluthrin,Biomonitoring,Acute,Median,6-11,0.0000433,0.0117,0.3701
-This study,Physiologically based kinetic model,Cyfluthrin,Biomonitoring,Acute,Upper,6-11,0.0000511,0.0117,0.4368
-This study,Physiologically based kinetic model,Permethrin,Biomonitoring,Acute,Median,6-11,0.00178,0.44,0.4045
-This study,Physiologically based kinetic model,Permethrin,Biomonitoring,Acute,Upper,6-11,0.00227,0.44,0.5159
-This study,Physiologically based kinetic model,Cypermethrin,Biomonitoring,Acute,Median,6-11,0.000178,0.0716,0.2486
-This study,Physiologically based kinetic model,Cypermethrin,Biomonitoring,Acute,Upper,6-11,0.000227,0.0716,0.317
-This study,Physiologically based kinetic model,Cyfluthrin,Biomonitoring,Acute,Median,<6,0.000101,0.0117,0.8632
-This study,Physiologically based kinetic model,Cyfluthrin,Biomonitoring,Acute,Upper,<6,0.000125,0.0117,1.0684
-This study,Physiologically based kinetic model,Permethrin,Biomonitoring,Acute,Median,<6,0.00519,0.44,1.1795
-This study,Physiologically based kinetic model,Permethrin,Biomonitoring,Acute,Upper,<6,0.0068,0.44,1.5455
-This study,Physiologically based kinetic model,Cypermethrin,Biomonitoring,Acute,Median,<6,0.000519,0.0716,0.7249
-This study,Physiologically based kinetic model,Cypermethrin,Biomonitoring,Acute,Upper,<6,0.00068,0.0716,0.9497
-Comptox dashboard,Systematic Empirical Evaluation of Models,Deltamethrin,Multi-pathway,Chronic,Median,6-11,0.00000299,0.0149,0.0201
-Comptox dashboard,Systematic Empirical Evaluation of Models,Deltamethrin,Multi-pathway,Chronic,Upper,6-11,0.000567,0.0149,3.8054
+EPA 2023,Dietary Exposure Evaluation Model,Deltamethrin,Food consumption,Chronic,Median,1- 2 yrs,0.000596,0.0149,4
+EPA 2023,Dietary Exposure Evaluation Model,Deltamethrin,Food consumption,Acute,Median,1- 2 yrs,0.003588,0.0149,24.0805
+EPA 2023,Dietary Exposure Evaluation Model,Deltamethrin,Food consumption,Chronic,Median,6- 12 yrs,0.000323,0.0149,2.1678
+EPA 2023,Dietary Exposure Evaluation Model,Deltamethrin,Food consumption,Acute,Median,6- 12 yrs,0.002325,0.0149,15.604
+EPA,Dietary Exposure Evaluation Model,Cyfluthrin,Food consumption,Chronic,Median,6- 12 yrs,0.000921,0.0117,7.8718
+EPA,Dietary Exposure Evaluation Model,Cyfluthrin,Food consumption,Acute,Median,6- 12 yrs,0.00239,0.0117,20.4274
+EPA,Dietary Exposure Evaluation Model,Permethrin,Food consumption,Chronic,Median,6- 12 yrs,0.00109,0.44,0.2477
+EPA,Dietary Exposure Evaluation Model,Permethrin,Food consumption,Acute,Median,6- 12 yrs,0.0265,0.44,6.0227
+EPA,Dietary Exposure Evaluation Model,Cypermethrin,Food consumption,Chronic,Median,6- 12 yrs,0.000294,0.0716,0.4106
+EPA,Dietary Exposure Evaluation Model,Cypermethrin,Food consumption,Acute,Median,6- 12 yrs,0.01256,0.0716,17.5419
+EPA 2023,Dietary Exposure Evaluation Model,Deltamethrin,Food consumption,Chronic,Median,3- 5 yrs,0.000544,0.0149,3.651
+EPA 2023,Dietary Exposure Evaluation Model,Deltamethrin,Food consumption,Acute,Median,3- 5 yrs,0.0039,0.0149,26.1745
+EPA,Dietary Exposure Evaluation Model,Cyfluthrin,Food consumption,Chronic,Median,3- 5 yrs,0.00157,0.0117,13.4188
+EPA,Dietary Exposure Evaluation Model,Cyfluthrin,Food consumption,Acute,Median,3- 5 yrs,0.003227,0.0117,27.5812
+EPA,Dietary Exposure Evaluation Model,Permethrin,Food consumption,Chronic,Median,3- 5 yrs,0.00222,0.44,0.5045
+EPA,Dietary Exposure Evaluation Model,Permethrin,Food consumption,Acute,Median,3- 5 yrs,0.041856,0.44,9.5127
+EPA,Dietary Exposure Evaluation Model,Cypermethrin,Food consumption,Chronic,Median,3- 5 yrs,0.000544,0.0716,0.7598
+EPA,Dietary Exposure Evaluation Model,Cypermethrin,Food consumption,Acute,Median,3- 5 yrs,0.022196,0.0716,31
+Stanfield et al. 2022,High-throughput model,Deltamethrin,Biomonitoring,Chronic,Median,6- 11 yrs,0.0000198,0.0149,0.1329
+Stanfield et al. 2022,High-throughput model,Deltamethrin,Biomonitoring,Chronic,Upper,6- 11 yrs,0.0000438,0.0149,0.294
+Stanfield et al. 2022,High-throughput model,Cyfluthrin,Biomonitoring,Chronic,Median,6- 11 yrs,0.000000937,0.0117,0.008
+Stanfield et al. 2022,High-throughput model,Cyfluthrin,Biomonitoring,Chronic,Upper,6- 11 yrs,0.00000176,0.0117,0.015
+Stanfield et al. 2022,High-throughput model,Permethrin,Biomonitoring,Chronic,Median,6- 11 yrs,0.00000149,0.44,0.0003
+Stanfield et al. 2022,High-throughput model,Permethrin,Biomonitoring,Chronic,Upper,6- 11 yrs,0.0000219,0.44,0.005
+Stanfield et al. 2022,High-throughput model,Cypermethrin,Biomonitoring,Chronic,Median,6- 11 yrs,0.00000154,0.0716,0.0022
+Stanfield et al. 2022,High-throughput model,Cypermethrin,Biomonitoring,Chronic,Upper,6- 11 yrs,0.0000239,0.0716,0.0334
+This study,Physiologically based kinetic model,Deltamethrin,Biomonitoring,Acute,Median,6- 11 yrs,0.0000551,0.0149,0.3698
+This study,Physiologically based kinetic model,Deltamethrin,Biomonitoring,Acute,Upper,6- 11 yrs,0.0000634,0.0149,0.4255
+This study,Physiologically based kinetic model,Cyfluthrin,Biomonitoring,Acute,Median,6- 11 yrs,0.0000433,0.0117,0.3701
+This study,Physiologically based kinetic model,Cyfluthrin,Biomonitoring,Acute,Upper,6- 11 yrs,0.0000511,0.0117,0.4368
+This study,Physiologically based kinetic model,Permethrin,Biomonitoring,Acute,Median,6- 11 yrs,0.00178,0.44,0.4045
+This study,Physiologically based kinetic model,Permethrin,Biomonitoring,Acute,Upper,6- 11 yrs,0.00227,0.44,0.5159
+This study,Physiologically based kinetic model,Cypermethrin,Biomonitoring,Acute,Median,6- 11 yrs,0.000178,0.0716,0.2486
+This study,Physiologically based kinetic model,Cypermethrin,Biomonitoring,Acute,Upper,6- 11 yrs,0.000227,0.0716,0.317
+This study,Physiologically based kinetic model,Cyfluthrin,Biomonitoring,Acute,Median,< 6 yrs,0.000101,0.0117,0.8632
+This study,Physiologically based kinetic model,Cyfluthrin,Biomonitoring,Acute,Upper,< 6 yrs,0.000125,0.0117,1.0684
+This study,Physiologically based kinetic model,Permethrin,Biomonitoring,Acute,Median,< 6 yrs,0.00519,0.44,1.1795
+This study,Physiologically based kinetic model,Permethrin,Biomonitoring,Acute,Upper,< 6 yrs,0.0068,0.44,1.5455
+This study,Physiologically based kinetic model,Cypermethrin,Biomonitoring,Acute,Median,< 6 yrs,0.000519,0.0716,0.7249
+This study,Physiologically based kinetic model,Cypermethrin,Biomonitoring,Acute,Upper,< 6 yrs,0.00068,0.0716,0.9497
+Comptox dashboard,Systematic Empirical Evaluation of Models,Deltamethrin,Multi-pathway,Chronic,Median,6- 11 yrs,0.00000299,0.0149,0.0201
+Comptox dashboard,Systematic Empirical Evaluation of Models,Deltamethrin,Multi-pathway,Chronic,Upper,6- 11 yrs,0.000567,0.0149,3.8054
 Comptox dashboard,Systematic Empirical Evaluation of Models,Deltamethrin,Multi-pathway,Chronic,Median,Total,0.000000239,0.0149,0.0016
 Comptox dashboard,Systematic Empirical Evaluation of Models,Deltamethrin,Multi-pathway,Chronic,Upper,Total,0.0000133,0.0149,0.0893
-Comptox dashboard,Systematic Empirical Evaluation of Models,Cyfluthrin,Multi-pathway,Chronic,Median,6-11,0.00000273,0.0117,0.0233
-Comptox dashboard,Systematic Empirical Evaluation of Models,Cyfluthrin,Multi-pathway,Chronic,Upper,6-11,0.000301,0.0117,2.5726
+Comptox dashboard,Systematic Empirical Evaluation of Models,Cyfluthrin,Multi-pathway,Chronic,Median,6- 11 yrs,0.00000273,0.0117,0.0233
+Comptox dashboard,Systematic Empirical Evaluation of Models,Cyfluthrin,Multi-pathway,Chronic,Upper,6- 11 yrs,0.000301,0.0117,2.5726
 Comptox dashboard,Systematic Empirical Evaluation of Models,Cyfluthrin,Multi-pathway,Chronic,Median,Total,0.000000233,0.0117,0.002
 Comptox dashboard,Systematic Empirical Evaluation of Models,Cyfluthrin,Multi-pathway,Chronic,Upper,Total,0.00000978,0.0117,0.0836
-Comptox dashboard,Systematic Empirical Evaluation of Models,Permethrin,Multi-pathway,Chronic,Median,6-11,0.00000265,0.44,0.0006
-Comptox dashboard,Systematic Empirical Evaluation of Models,Permethrin,Multi-pathway,Chronic,Upper,6-11,0.000278,0.44,0.0632
+Comptox dashboard,Systematic Empirical Evaluation of Models,Permethrin,Multi-pathway,Chronic,Median,6- 11 yrs,0.00000265,0.44,0.0006
+Comptox dashboard,Systematic Empirical Evaluation of Models,Permethrin,Multi-pathway,Chronic,Upper,6- 11 yrs,0.000278,0.44,0.0632
 Comptox dashboard,Systematic Empirical Evaluation of Models,Permethrin,Multi-pathway,Chronic,Median,Total,0.000000496,0.44,0.0001
 Comptox dashboard,Systematic Empirical Evaluation of Models,Permethrin,Multi-pathway,Chronic,Upper,Total,0.0000116,0.44,0.0026
-Comptox dashboard,Systematic Empirical Evaluation of Models,Cypermethrin,Multi-pathway,Chronic,Median,6-11,0.00000256,0.0716,0.0036
-Comptox dashboard,Systematic Empirical Evaluation of Models,Cypermethrin,Multi-pathway,Chronic,Upper,6-11,0.000491,0.0716,0.6858
+Comptox dashboard,Systematic Empirical Evaluation of Models,Cypermethrin,Multi-pathway,Chronic,Median,6- 11 yrs,0.00000256,0.0716,0.0036
+Comptox dashboard,Systematic Empirical Evaluation of Models,Cypermethrin,Multi-pathway,Chronic,Upper,6- 11 yrs,0.000491,0.0716,0.6858
 Comptox dashboard,Systematic Empirical Evaluation of Models,Cypermethrin,Multi-pathway,Chronic,Median,Total,0.000000269,0.0716,0.0004
 Comptox dashboard,Systematic Empirical Evaluation of Models,Cypermethrin,Multi-pathway,Chronic,Upper,Total,0.0000143,0.0716,0.02
 This study,Physiologically based kinetic model,Deltamethrin,Biomonitoring,Acute,Median,Total,0.0000215,0.0149,0.1443
