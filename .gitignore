@@ -1,6 +1,5 @@
 .Rhistory
 *.log
-*.pdf
 data/nhanes/*
 /outputs
 /MCSim/saves/*
